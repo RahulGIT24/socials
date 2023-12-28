@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import LoadingBar from "react-top-loading-bar";
 
 const Login = () => {
   const router = useRouter();
@@ -15,11 +16,10 @@ const Login = () => {
     password: "",
   });
 
-  const [progress, setProgress] = useState<Number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-
     if (credentials.password.length < 8) {
       toast.error("Password Length Should be at least 8 characters");
       return;
@@ -31,13 +31,17 @@ const Login = () => {
     }
 
     try {
+      setProgress(30);
       await axios.post("/api/users/auth/login", {
         usernameOrEmail: credentials.usernameOrEmail,
         password: credentials.password,
       });
+      setProgress(70);
       toast.success("Login Succeed");
       router.push("/");
+      setProgress(100);
     } catch (e: any) {
+      setProgress(0);
       console.log(e);
       toast.error(e.message);
       return;
@@ -46,6 +50,11 @@ const Login = () => {
 
   return (
     <>
+    <LoadingBar
+        color='blue'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <section className="w-full h-screen flex justify-center items-center flex-col">
         <h1 className="text-center py-12 text-4xl font-medium">
           Welcome Back!

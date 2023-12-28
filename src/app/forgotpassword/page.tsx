@@ -2,19 +2,23 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import LoadingBar from "react-top-loading-bar";
 
 const ForgotPassword = () => {
   const [emailorusername, setEmailorUsername] = useState<string>("");
 
-  const [progress, setProgress] = useState<Number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
     try {
+      setProgress(30);
       await axios.post("/api/users/auth/forgotpassword", {
         emailOrUsername: emailorusername,
       });
+      setProgress(70);
       toast.success("Email send successfully");
+      setProgress(100);
       return;
     } catch (e: any) {
       toast.error(e.message);
@@ -24,6 +28,11 @@ const ForgotPassword = () => {
 
   return (
     <>
+      <LoadingBar
+        color="blue"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <section className="w-full h-80 flex justify-center items-center flex-col">
         <h1 className="text-center py-12 text-4xl font-medium">
           Account Recovery

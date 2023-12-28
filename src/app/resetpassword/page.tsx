@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import LoadingBar from "react-top-loading-bar";
 
 const ResetPassword = () => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const ResetPassword = () => {
     cpassword: "",
   });
 
-  const [progress, setProgress] = useState<Number>(0);
+  const [progress, setProgress] = useState<number>(0);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -32,12 +33,15 @@ const ResetPassword = () => {
         return;
       }
 
+      setProgress(50);
       await axios.post("/api/users/auth/resetpassword", {
         token,
         password,
       });
+      setProgress(70);
       router.push("/login");
       toast.success("Password reset successfully");
+      setProgress(100);
       return;
     } catch (e: any) {
       toast.error(e.message);
@@ -52,6 +56,11 @@ const ResetPassword = () => {
 
   return (
     <>
+      <LoadingBar
+        color="blue"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <section className="w-full h-screen flex justify-center items-center flex-col">
         <h1 className="text-center py-12 text-4xl font-medium">
           Create new Password
