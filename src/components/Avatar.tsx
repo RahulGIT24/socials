@@ -21,7 +21,7 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
   const handleSubmit = async () => {};
 
   const handleSkip = () => {
-    router.push("/login");
+    router.push("/");
     setProfilePic(false);
   };
 

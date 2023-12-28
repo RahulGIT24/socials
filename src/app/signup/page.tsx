@@ -3,6 +3,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Avatar from "@/components/Avatar";
+import Link from "next/link";
 
 const SignUp = () => {
   const today = new Date().toISOString().split("T")[0];
@@ -21,7 +22,7 @@ const SignUp = () => {
   });
 
   const [selectedGender, setSelectedGender] = useState<String | null>(null);
-  const [profilePic, setProfilePic] = useState<Boolean>(true);
+  const [profilePic, setProfilePic] = useState<Boolean>(false);
   const [progress, setProgress] = useState<Number>(0);
 
   const handleGenderChange = (gender: string) => {
@@ -72,7 +73,7 @@ const SignUp = () => {
       {profilePic === true ? (
         <Avatar setProfilePic={setProfilePic} />
       ) : (
-        <section className="w-full">
+        <section className="w-full h-screen flex justify-center items-center flex-col">
           <h1 className="text-center py-12 text-4xl font-medium">
             Create your account
           </h1>
@@ -212,11 +213,14 @@ const SignUp = () => {
             </form>
 
             <button
-              className="rounded-3xl border border-white px-3 py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95"
+              className="rounded-3xl border border-white px-14 py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95 mb-4 text-center"
               onClick={onSubmit}
             >
-              Create Account
+              Create your account
             </button>
+            <p className="text-blue-500 font-semibold mb-4 hover:underline">
+              <Link href={"/login"}>Login Instead</Link>
+            </p>
           </main>
         </section>
       )}

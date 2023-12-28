@@ -1,74 +1,67 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-const Login = () => {
+const ResetPassword = () => {
   const router = useRouter();
+  const [token, setToken] = useState("");
   const [credentials, setCredentials] = useState<{
-    usernameOrEmail: string;
     password: string;
+    cpassword: string;
   }>({
-    usernameOrEmail: "",
     password: "",
+    cpassword: "",
   });
 
   const [progress, setProgress] = useState<Number>(0);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-
-    if (credentials.password.length < 8) {
-      toast.error("Password Length Should be at least 8 characters");
-      return;
-    }
-
-    if (!credentials.usernameOrEmail || !credentials.password) {
-      toast.error("Fill the required fields");
-      return;
-    }
+    const { password, cpassword } = credentials;
 
     try {
-      await axios.post("/api/users/auth/login", {
-        usernameOrEmail: credentials.usernameOrEmail,
-        password: credentials.password,
+      if (cpassword != password) {
+        toast.error("Confirm password and Password are not same");
+        return;
+      }
+
+      if (password.length < 8) {
+        toast.error("Password should be at least of 8 characters");
+        return;
+      }
+
+      await axios.post("/api/users/auth/resetpassword", {
+        token,
+        password,
       });
-      toast.success("Login Succeed");
-      router.push("/");
+      router.push("/login");
+      toast.success("Password reset successfully");
+      return;
     } catch (e: any) {
-      console.log(e);
       toast.error(e.message);
       return;
     }
   };
 
+  useEffect(() => {
+    const urlToken = window.location.search.split("=")[1];
+    setToken(urlToken || "");
+  }, []);
+
   return (
     <>
       <section className="w-full h-screen flex justify-center items-center flex-col">
         <h1 className="text-center py-12 text-4xl font-medium">
-          Welcome Back!
+          Create new Password
         </h1>
         <main className="flex justify-center items-center flex-col w-full">
           <form className="flex justify-center items-center flex-col">
             <input
-              type="text"
-              name="email"
-              placeholder="Enter your email or username"
-              className="px-2 py-3 rounded-lg bg-transparent text-white mb-3 border border-white"
-              onChange={(e) => {
-                setCredentials({
-                  ...credentials,
-                  usernameOrEmail: e.target.value,
-                });
-              }}
-              required
-            />
-            <input
               type="password"
               name="password"
-              placeholder="Enter your password"
+              placeholder="Enter your new password"
               className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white"
               onChange={(e) => {
                 setCredentials({
@@ -78,24 +71,30 @@ const Login = () => {
               }}
               required
             />
+            <input
+              type="password"
+              name="cpassword"
+              placeholder="Confirm Password"
+              className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white"
+              onChange={(e) => {
+                setCredentials({
+                  ...credentials,
+                  cpassword: e.target.value,
+                });
+              }}
+              required
+            />
           </form>
-          <p className="text-blue-500 font-semibold mb-4 hover:underline">
-            <Link href={"/forgotpassword"}>Forgot Password?</Link>
-          </p>
           <button
             className="rounded-3xl border border-white px-24 py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95"
             onClick={onSubmit}
           >
-            Log In
+            Reset Password
           </button>
-          <p className="my-4 font-bold text-xl">OR</p>
-          <p className="text-blue-500 font-semibold mb-4 hover:underline">
-            <Link href={"/signup"}>Create a new account</Link>
-          </p>
         </main>
       </section>
     </>
   );
 };
 
-export default Login;
+export default ResetPassword;
