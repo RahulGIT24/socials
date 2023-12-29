@@ -52,8 +52,8 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
       router.push("/");
       return;
     } catch (e: any) {
-      setProgress(0);
-      toast.error(e.message);
+      setProgress(100);
+      toast.error(e.response.data.error || "Internal server error");
       return;
     }
   }

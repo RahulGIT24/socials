@@ -19,7 +19,7 @@ const Sidebar = () => {
       toast.success("Logged Out Successfully!");
       router.push("/login");
     } catch (e: any) {
-      toast.error(e.message);
+      toast.error(e.response.data.error || "Internal server error");
       return;
     }
   };

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
             const userId = decodedToken.id;
 
             const user = await User.findById(userId);
-            
+
             if (!user) {
                 return NextResponse.json({ error: "Invalid token" }, { status: 400 })
             }

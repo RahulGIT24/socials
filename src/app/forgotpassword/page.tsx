@@ -21,7 +21,8 @@ const ForgotPassword = () => {
       setProgress(100);
       return;
     } catch (e: any) {
-      toast.error(e.message);
+      setProgress(100);
+      toast.error(e.response.data.error || "Internal server error");
       return;
     }
   };

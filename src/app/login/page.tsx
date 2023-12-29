@@ -41,9 +41,8 @@ const Login = () => {
       router.push("/");
       setProgress(100);
     } catch (e: any) {
-      setProgress(0);
-      console.log(e);
-      toast.error(e.message);
+      setProgress(100);
+      toast.error(e.response.data.error);
       return;
     }
   };
