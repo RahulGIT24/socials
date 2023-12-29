@@ -33,9 +33,12 @@ export async function POST(request: NextRequest) {
 
         const tokenData = {
             id: user._id,
+            name: user.name,
+            username: user.userName,
+            pic: user.profilePic
         }
 
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: "1d" })
+        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: "60d" })
 
         const response = NextResponse.json({
             message: "Login Successfull",

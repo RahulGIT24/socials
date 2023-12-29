@@ -47,8 +47,11 @@ export async function POST(request: NextRequest) {
 
         const tokenData = {
             id: savedUser._id,
+            name: savedUser.name,
+            username: savedUser.userName,
+            pic: savedUser.profilePic
         }
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: "1d" })
+        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, { expiresIn: "60d" })
 
         const response = NextResponse.json({
             message: "Welcome to Socials",
