@@ -1,31 +1,27 @@
-import { v2 as cloudinary } from "cloudinary"
-import fs from "fs"
+import CLOUDINARY_SECRETS from "../../secrets";
 
+export const postImage = async (form: any) => {
+    const CLOUD_NAME = CLOUDINARY_SECRETS.CLOUD_NAME;
+    const UPLOAD_PRESET = CLOUDINARY_SECRETS.UPLOAD_PRESET;
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUD_API,
-    api_secret: process.env.CLOUD_API_SECRET
-});
+    const fileInput: any = Array.from(form.elements).find(
+        ({ name }: any) => name === "file"
+    );
 
-const uploadOnCloudinary = async (localFilePath: any) => {
-    try {
-        if (!localFilePath) return null
-        //upload the file on cloudinary
-        const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "auto"
-        })
-        // file has been uploaded successfull
-        //console.log("file is uploaded on cloudinary ", response.url);
-        fs.unlinkSync(localFilePath)
-        return response;
+    const formData = new FormData();
 
-    } catch (error) {
-        fs.unlinkSync(localFilePath) // remove the locally saved temporary file as the upload operation got failed
-        return null;
-    }
-}
+    const file = fileInput?.files[0];
+    formData.append("file", file);
 
+    formData.append("upload_preset", UPLOAD_PRESET!);
 
+    const data = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME!}/image/upload`,
+        {
+            method: "POST",
+            body: formData,
+        }
+    ).then((r) => r.json());
 
-export { uploadOnCloudinary }
+    return data.secure_url;
+};
