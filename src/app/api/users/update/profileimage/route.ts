@@ -8,14 +8,14 @@ export async function POST(request: NextRequest) {
         await connect();
         const reqBody = await request.json();
         const { url } = reqBody;
-        const token: any = request.cookies.get("token");
+        const token: { value: string } | undefined = request.cookies.get("token");
 
         if (!token) {
             return NextResponse.json({ error: "Token not available" }, { status: 400 })
         }
 
-        const decodedToken: any = jwt.verify(token.value, process.env.TOKEN_SECRET!);
-        const userId = decodedToken.id;
+        const decodedToken: string | object = jwt.verify(token.value, process.env.TOKEN_SECRET!);
+        const userId = (decodedToken as { id: string }).id;
 
         const user = await User.findById(userId);
 

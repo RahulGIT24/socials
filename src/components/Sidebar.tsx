@@ -8,9 +8,9 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const Sidebar = () => {
-  const [name, setName] = useState("");
-  const [userName, setUsername] = useState("");
-  const [pic, setPic] = useState("");
+  const [name, setName] = useState<string>("");
+  const [userName, setUsername] = useState<string>("");
+  const [pic, setPic] = useState<string>("");
 
   const router = useRouter();
   const onLogout = async () => {
@@ -34,7 +34,7 @@ const Sidebar = () => {
       setPic(res.data.userDetails.pic);
       return;
     } catch (e: any) {
-      toast.error(e.message);
+      toast.error(e.response.data.error);
       return;
     }
   };

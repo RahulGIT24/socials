@@ -16,15 +16,19 @@ export async function POST(request: NextRequest) {
                 return NextResponse.json({ error: "Token not available" }, { status: 400 })
             }
 
-            const decodedToken: any = jwt.verify(token.value, process.env.TOKEN_SECRET!);
-            const userId = decodedToken.id;
+            const decodedToken: string | object = jwt.verify(token.value, process.env.TOKEN_SECRET!);
+            const userId = (decodedToken as { id: string }).id;
 
             const user = await User.findById(userId);
 
             if (!user) {
-                return NextResponse.json({ error: "Invalid token" }, { status: 400 })
+                const res = NextResponse.json({
+                    message: "Session Expired",
+                }, { status: 400 })
+                res.cookies.set("token", "", { httpOnly: true, expires: new Date(0) })
+                return res;
             }
-            decodedToken.pic = user.profilePic
+            (decodedToken as { pic: string }).pic = user.profilePic
 
             return NextResponse.json({ userDetails: decodedToken }, { status: 200 })
         }
