@@ -7,6 +7,7 @@ import Link from "next/link";
 import LoadingBar from "react-top-loading-bar";
 
 const SignUp = () => {
+  const [disabled,setDisabled] = useState(false);
   const today = new Date().toISOString().split("T")[0];
   const [userInfo, setUserInfo] = useState<{
     name: String;
@@ -51,6 +52,7 @@ const SignUp = () => {
     }
 
     try {
+      setDisabled(true);
       setProgress(30);
       await axios.post("/api/users/auth/signup", {
         name: userInfo.name,
@@ -75,12 +77,13 @@ const SignUp = () => {
         toast.error(
           "Not a correct username it can start with characters only or _ also special characters not allowed"
         );
-        setProgress(100);
         return;
       }
-      setProgress(100);
       toast.error(e.response.data.error || "Internal server error");
       return;
+    }finally{
+      setProgress(100);
+      setDisabled(false);
     }
   };
 
@@ -236,7 +239,7 @@ const SignUp = () => {
 
               <button
                 className="rounded-3xl border border-white px-14 py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95 mb-4 text-center"
-                onClick={onSubmit}
+                onClick={onSubmit} disabled={disabled}
               >
                 Create your account
               </button>

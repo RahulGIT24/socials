@@ -17,6 +17,7 @@ const Login = () => {
   });
 
   const [progress, setProgress] = useState<number>(0);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ const Login = () => {
     }
 
     try {
+      setDisabled(true);
       setProgress(30);
       await axios.post("/api/users/auth/login", {
         usernameOrEmail: credentials.usernameOrEmail,
@@ -41,9 +43,11 @@ const Login = () => {
       router.push("/");
       setProgress(100);
     } catch (e: any) {
-      setProgress(100);
       toast.error(e.response.data.error);
       return;
+    }finally{
+      setProgress(100);
+      setDisabled(false);
     }
   };
 
@@ -92,7 +96,7 @@ const Login = () => {
           </p>
           <button
             className="rounded-3xl border border-white px-24 py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95"
-            onClick={onSubmit}
+            onClick={onSubmit} disabled={disabled}
           >
             Log In
           </button>

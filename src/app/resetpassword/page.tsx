@@ -7,6 +7,7 @@ import LoadingBar from "react-top-loading-bar";
 
 const ResetPassword = () => {
   const router = useRouter();
+  const [disabled,setDisabled] = useState(false);
   const [token, setToken] = useState("");
   const [credentials, setCredentials] = useState<{
     password: string;
@@ -34,6 +35,7 @@ const ResetPassword = () => {
       }
 
       setProgress(50);
+      setDisabled(true);
       await axios.post("/api/users/auth/resetpassword", {
         token,
         password,
@@ -44,9 +46,11 @@ const ResetPassword = () => {
       setProgress(100);
       return;
     } catch (e: any) {
-      setProgress(100);
       toast.error(e.response.data.error || "Internal server error");
       return;
+    }finally{
+      setProgress(100);
+      setDisabled(false);
     }
   };
 
@@ -97,7 +101,7 @@ const ResetPassword = () => {
           </form>
           <button
             className="rounded-3xl border border-white px-24 py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95"
-            onClick={onSubmit}
+            onClick={onSubmit} disabled={disabled}
           >
             Reset Password
           </button>

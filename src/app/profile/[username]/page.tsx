@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/Spinner";
 import { isSameUser } from "@/helpers/sameuser";
 import {
   faCalendarDays,
@@ -15,6 +16,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const Profile = ({ params }: any) => {
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const userName = params.username;
   const [button, setButton] = useState<string>("Sign in");
@@ -47,6 +49,7 @@ const Profile = ({ params }: any) => {
 
   const getUserByName = async () => {
     try {
+      setLoading(true);
       const res = await axios.post("/api/users/fetch/profile", { userName });
       setUser({
         id: res.data.user._id,
@@ -70,6 +73,8 @@ const Profile = ({ params }: any) => {
     } catch (e: any) {
       toast.error(e.response.data.error);
       return;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,57 +114,65 @@ const Profile = ({ params }: any) => {
   }
 
   return (
-    <section className="w-full">
-      <div className="cover-image flex justify-start items-start flex-col ml-10">
-        <Image
-          className="rounded-full mt-12 mb-6"
-          alt="profile-pic"
-          src={user.profilePic}
-          width={100}
-          height={100}
-        />
-        <p className="text-3xl text-center">{user.name}</p>
-        <p className="font-extralight text-gray-500 font-serif text-center">
-          {user.username}
-        </p>
-        {user.bio && `<p className="mt-5 font-mono">{user.bio}</p>`}
-        <div className="flex justify-center items-center mb-12 mt-5">
-          {user.location &&
-            `<p className="mr-4">
+    <>
+      {loading === true ? (
+        <Spinner />
+      ) : (
+        <section className="w-full">
+          <div className="cover-image flex justify-start items-start flex-col ml-10">
+            <Image
+              className="rounded-full mt-12 mb-6"
+              alt="profile-pic"
+              src={user.profilePic}
+              width={100}
+              height={100}
+            />
+            <p className="text-3xl text-center">{user.name}</p>
+            <p className="font-extralight text-gray-500 font-serif text-center">
+              {user.username}
+            </p>
+            {user.bio && `<p className="mt-5 font-mono">{user.bio}</p>`}
+            <div className="flex justify-center items-center mb-12 mt-5">
+              {user.location &&
+                `<p className="mr-4">
             <FontAwesomeIcon icon={faLocationDot} className="mr-2" />
             ${user.location}
           </p>`}
 
-          {user.webLink &&
-            ` <p className="mr-4">
+              {user.webLink &&
+                ` <p className="mr-4">
             <FontAwesomeIcon icon={faLink} className="mr-2" />
             <Link href=${user.webLink} className="text-blue-500">
               Visit My Website
             </Link>
           </p>`}
 
-          <p>
-            <FontAwesomeIcon icon={faCalendarDays} className="mr-2" />
-            Joined {getMonthName(Number(user.joined[5] + user.joined[6]))}{" "}
-            {user.joined[0]}
-            {user.joined[1]}
-            {user.joined[2]}
-            {user.joined[3]}
-          </p>
-        </div>
-        <div className="flex justify-center items-center mb-12">
-          <p className="mr-4">{user.followers.length} Followers</p>
-          <p className="mr-4">{user.following.length} Following</p>
-          <button
-            className="bg-white border text-black px-12 py-2.5 rounded-full hover:bg-black hover:text-white hover:border hover:transition-transform hover:transform hover:scale-110 duration-300 ease-in-out"
-            onClick={handleControl}
-          >
-            {button}
-          </button>
-        </div>
-      </div>
-      <hr />
-    </section>
+              <p>
+                <FontAwesomeIcon icon={faCalendarDays} className="mr-2" />
+                Joined {getMonthName(
+                  Number(user.joined[5] + user.joined[6])
+                )}{" "}
+                {user.joined[0]}
+                {user.joined[1]}
+                {user.joined[2]}
+                {user.joined[3]}
+              </p>
+            </div>
+            <div className="flex justify-center items-center mb-12">
+              <p className="mr-4">{user.followers.length} Followers</p>
+              <p className="mr-4">{user.following.length} Following</p>
+              <button
+                className="bg-white border text-black px-12 py-2.5 rounded-full hover:bg-black hover:text-white hover:border hover:transition-transform hover:transform hover:scale-110 duration-300 ease-in-out"
+                onClick={handleControl}
+              >
+                {button}
+              </button>
+            </div>
+          </div>
+          <hr />
+        </section>
+      )}
+    </>
   );
 };
 

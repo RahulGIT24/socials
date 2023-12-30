@@ -13,6 +13,7 @@ type ChildProps = {
 };
 
 const Avatar = ({ setProfilePic }: ChildProps) => {
+  const [disabled,setDisabled] = useState(true);
   const [progress, setProgress] = useState<number>(0);
   const router = useRouter();
   const [imageSrc, setImageSrc] = useState<any>(null);
@@ -32,6 +33,7 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
   async function handleOnSubmit(event: any) {
     event.preventDefault();
     try {
+      setDisabled(true);
       setProgress(30);
       const form = event.currentTarget;
       const res = await postImage(form);
@@ -54,9 +56,11 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
       router.push("/");
       return;
     } catch (e: any) {
-      setProgress(100);
       toast.error(e.response.data.error || "Internal server error");
       return;
+    }finally{
+      setProgress(100);
+      setDisabled(false);
     }
   }
 
@@ -119,7 +123,7 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
           <div className="flex justify-center mb-6 w-96 items-center">
             <button
               className="rounded-3xl border border-white py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95 px-16"
-              onClick={handleSkip}
+              onClick={handleSkip} disabled={disabled}
             >
               Skip
             </button>
