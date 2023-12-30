@@ -47,7 +47,7 @@ const ForgotPassword = () => {
               type="text"
               name="email"
               placeholder="Enter your email or username"
-              className="px-2 py-3 rounded-lg bg-transparent text-white mb-12 border border-white"
+              className="px-2 py-3 rounded-lg bg-transparent text-white mb-12 border border-white outline-none"
               onChange={(e) => {
                 setEmailorUsername(e.target.value);
               }}

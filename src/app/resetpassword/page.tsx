@@ -76,7 +76,7 @@ const ResetPassword = () => {
               type="password"
               name="password"
               placeholder="Enter your new password"
-              className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white"
+              className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white outline-none"
               onChange={(e) => {
                 setCredentials({
                   ...credentials,
@@ -89,7 +89,7 @@ const ResetPassword = () => {
               type="password"
               name="cpassword"
               placeholder="Confirm Password"
-              className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white"
+              className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white outline-none"
               onChange={(e) => {
                 setCredentials({
                   ...credentials,

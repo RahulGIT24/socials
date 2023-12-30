@@ -108,7 +108,7 @@ const SignUp = () => {
                   type="text"
                   name="name"
                   placeholder="Enter your name"
-                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-3 border border-white"
+                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-3 border border-white outline-none"
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
@@ -121,7 +121,7 @@ const SignUp = () => {
                   type="text"
                   name="usernamme"
                   placeholder="Enter your username"
-                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-3 border border-white"
+                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-3 border border-white outline-none"
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
@@ -134,7 +134,7 @@ const SignUp = () => {
                   type="email"
                   name="email"
                   placeholder="Enter your email"
-                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-3 border border-white"
+                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-3 border border-white outline-none"
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
@@ -147,7 +147,7 @@ const SignUp = () => {
                   type="password"
                   name="password"
                   placeholder="Enter your password"
-                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white"
+                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-4 border border-white outline-none"
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
@@ -161,7 +161,7 @@ const SignUp = () => {
                   name="date"
                   max={today}
                   placeholder="Enter your password"
-                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-6 border border-white w-full"
+                  className="px-2 py-3 rounded-lg bg-transparent text-white mb-6 border border-white w-full outline-none"
                   onChange={(e) => {
                     setUserInfo({
                       ...userInfo,
