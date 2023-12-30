@@ -22,13 +22,13 @@ export async function POST(request: NextRequest) {
         }
 
         if (!user) {
-            return NextResponse.json({ error: 'Invalid Email or username' }, { status: 400 });
+            return NextResponse.json({ error: 'User not existed' }, { status: 400 });
         }
 
         const passwordCompare = await bcryptjs.compare(password, user.password);
 
         if (!passwordCompare) {
-            return NextResponse.json({ message: "Please login with correct credentials" }, { status: 400 });
+            return NextResponse.json({ error: "Please login with correct credentials" }, { status: 400 });
         }
 
         const tokenData = {

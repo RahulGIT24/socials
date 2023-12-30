@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: "Profile pic updated" }, { status: 200 })
 
     } catch (e: any) {
-        console.log(e);
         return NextResponse.json({ error: e }, { status: 500 })
     }
 }

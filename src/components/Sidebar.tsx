@@ -35,6 +35,9 @@ const Sidebar = () => {
       return;
     } catch (e: any) {
       toast.error(e.response.data.error);
+      if (e.response.data.error === "Session Expired") {
+        router.push("/login");
+      }
       return;
     }
   };

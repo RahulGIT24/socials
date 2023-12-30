@@ -67,6 +67,17 @@ const SignUp = () => {
       setProgress(100);
       return;
     } catch (e: any) {
+      if (
+        e.response.data.error.includes(
+          "users validation failed: userName: Path"
+        )
+      ) {
+        toast.error(
+          "Not a correct username it can start with characters only or _ also special characters not allowed"
+        );
+        setProgress(100);
+        return;
+      }
       setProgress(100);
       toast.error(e.response.data.error || "Internal server error");
       return;

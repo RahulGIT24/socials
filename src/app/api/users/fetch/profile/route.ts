@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
             if (!user) {
                 const res = NextResponse.json({
-                    message: "Session Expired",
+                    error: "Session Expired",
                 }, { status: 400 })
                 res.cookies.set("token", "", { httpOnly: true, expires: new Date(0) })
                 return res;

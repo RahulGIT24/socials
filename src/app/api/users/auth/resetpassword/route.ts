@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
         const user = await User.findOne({ forgotPasswordToken: token, forgotPasswordTokenExpiry: { $gt: Date.now() } })
 
         if (!user) {
-            return NextResponse.json({ message: "User not found" }, { status: 400 });
+            return NextResponse.json({ error: "User not found" }, { status: 400 });
         }
 
         const salt = await bcryptjs.genSalt(10);
@@ -31,6 +31,6 @@ export async function POST(request: NextRequest) {
         })
 
     } catch (e: any) {
-        return NextResponse.json({ message: e.message }, { status: 500 });
+        return NextResponse.json({ error: e.message }, { status: 500 });
     }
 }
