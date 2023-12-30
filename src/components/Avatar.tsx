@@ -1,3 +1,5 @@
+"use client"
+
 import { postImage } from "@/helpers/fileupload";
 import axios from "axios";
 import Image from "next/image";

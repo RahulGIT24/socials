@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     },
     backgroundImage: {
         type: String,
-        default: "https://img.freepik.com/premium-vectorblack-background-horizontal-design-vertical-shape-dark-background-vector-illustration_601576-1393.jpg?w=2000"
+        default: "https://www.munichre.com/content/dam/munichre/global/images/royalty-free/GettyImages-1194981230.jpg/_jcr_content/renditions/cropped.3_to_1.jpg./cropped.3_to_1.jpg"
     },
     dateOfBirth: {
         type: String,
