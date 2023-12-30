@@ -33,9 +33,9 @@ const Sidebar = () => {
       const res = await axios.post("/api/users/fetch/profile", {
         userName: "",
       });
-      setName("Hi, " + res.data.userDetails.name.split(" ")[0]);
-      setUsername(res.data.userDetails.username);
-      setPic(res.data.userDetails.pic);
+      setName("Hi, " + res.data.user.name.split(" ")[0]);
+      setUsername(res.data.user.userName);
+      setPic(res.data.user.profilePic);
       return;
     } catch (e: any) {
       toast.error(e.response.data.error);

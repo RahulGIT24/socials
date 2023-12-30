@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
             const decodedToken: string | object = jwt.verify(token.value, process.env.TOKEN_SECRET!);
             const userId = (decodedToken as { id: string }).id;
 
-            const user = await User.findById(userId);
+            const user = await User.findById(userId).select("-password");
 
             if (!user) {
                 const res = NextResponse.json({
@@ -28,9 +28,8 @@ export async function POST(request: NextRequest) {
                 res.cookies.set("token", "", { httpOnly: true, expires: new Date(0) })
                 return res;
             }
-            (decodedToken as { pic: string }).pic = user.profilePic
 
-            return NextResponse.json({ userDetails: decodedToken }, { status: 200 })
+            return NextResponse.json({user}, { status: 200 })
         }
 
         const user = await User.findOne({ userName }).select("-password");
@@ -41,7 +40,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ user }, { status: 200 })
 
     } catch (e: any) {
-        console.log(e);
         return NextResponse.json({ error: e }, { status: 500 })
     }
 }

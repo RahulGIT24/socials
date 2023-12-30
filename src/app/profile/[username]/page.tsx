@@ -83,6 +83,10 @@ const Profile = ({ params }: any) => {
       router.push("/login");
       return;
     }
+    if(button === 'Edit Profile'){
+      router.push("/editprofile")
+      return;
+    }
   };
 
   useEffect(() => {
