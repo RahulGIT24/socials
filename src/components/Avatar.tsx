@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { postImage } from "@/helpers/fileupload";
-import axios from "axios";
+import { postImage } from "@/helpers/cloudinary";
+import { upload } from "@/helpers/upload";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -13,7 +13,7 @@ type ChildProps = {
 };
 
 const Avatar = ({ setProfilePic }: ChildProps) => {
-  const [disabled,setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(true);
   const [progress, setProgress] = useState<number>(0);
   const router = useRouter();
   const [imageSrc, setImageSrc] = useState<any>(null);
@@ -31,36 +31,22 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
   }
 
   async function handleOnSubmit(event: any) {
-    event.preventDefault();
     try {
-      setDisabled(true);
-      setProgress(30);
-      const form = event.currentTarget;
-      const res = await postImage(form);
-
-      if (res === undefined) {
-        throw new Error("Image can't be uploaded");
-      }
-
-      setProgress(70);
-      const response = await axios.post("/api/users/update/profileimage", {
-        url: res,
+      await upload({
+        event,
+        setDisabled,
+        setProgress,
+        postImage,
+        setUploadData,
+        setImageSrc,
       });
-
-      console.log(response);
-      toast.success("Profile Pic set successfully!");
-      setProgress(100);
       setProfilePic(false);
-      setUploadData(null);
-      setImageSrc(null);
+      toast.success("Profile Pic set successfully!");
       router.push("/");
       return;
-    } catch (e: any) {
-      toast.error(e.response.data.error || "Internal server error");
+    } catch (e) {
+      toast.error("Internal server error");
       return;
-    }finally{
-      setProgress(100);
-      setDisabled(false);
     }
   }
 
@@ -123,7 +109,8 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
           <div className="flex justify-center mb-6 w-96 items-center">
             <button
               className="rounded-3xl border border-white py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95 px-16"
-              onClick={handleSkip} disabled={disabled}
+              onClick={handleSkip}
+              disabled={disabled}
             >
               Skip
             </button>

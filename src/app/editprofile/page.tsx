@@ -1,10 +1,17 @@
 "use client";
+import { postImage } from "@/helpers/cloudinary";
+import { upload } from "@/helpers/upload";
 import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import LoadingBar from "react-top-loading-bar";
 
 const EditProfile = () => {
+  const [imageSrc, setImageSrc] = useState<any>(null);
+  const [uploadData, setUploadData] = useState<any>(null);
+  const [disabled, setDisabled] = useState(true);
+  const [progress, setProgress] = useState<number>(0);
   const [userInfo, setUserInfo] = useState<{
     name: string;
     email: string;
@@ -55,6 +62,30 @@ const EditProfile = () => {
     }
   };
 
+  const handleOnChange = async (changeEvent: any) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = function (onLoadEvent) {
+        setImageSrc(onLoadEvent.target?.result);
+        setUploadData(undefined);
+      };
+      reader.readAsDataURL(changeEvent.target.files[0]);
+      await upload({
+        event: changeEvent,
+        setDisabled,
+        setProgress,
+        postImage,
+        setUploadData,
+        setImageSrc,
+      });
+      await fetchUser();
+      toast.success("Image Updated Successfully!");
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
@@ -75,6 +106,11 @@ const EditProfile = () => {
 
   return (
     <>
+      <LoadingBar
+        color="blue"
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <section>
         <h1 className="text-center py-12 text-4xl font-medium">
           Edit Your Profile
@@ -88,12 +124,24 @@ const EditProfile = () => {
             width={200}
             height={300}
           />
-          <button
-            type="button"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Update Profile Picture
-          </button>
+        </div>
+
+        <div className="flex justify-evenly mb-6 w-full items-center">
+          <form method="post" onChange={handleOnChange}>
+            <label
+              htmlFor="file-input"
+              className="cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Upload Picture
+            </label>
+            <input
+              id="file-input"
+              accept="image/"
+              type="file"
+              className="hidden"
+              name="file"
+            />
+          </form>
         </div>
 
         <form className="max-w-sm mx-auto ">
