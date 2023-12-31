@@ -1,69 +1,31 @@
 "use client";
+import { useUserContext } from "@/context/usercontext";
 import { postImage } from "@/helpers/cloudinary";
 import { upload } from "@/helpers/upload";
-import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import LoadingBar from "react-top-loading-bar";
 
 const EditProfile = () => {
+  const { setuserState, userState, getUser } = useUserContext();
   const [imageSrc, setImageSrc] = useState<any>(null);
   const [uploadData, setUploadData] = useState<any>(null);
-  const [disabled, setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(false);
   const [progress, setProgress] = useState<number>(0);
-  const [userInfo, setUserInfo] = useState<{
-    name: string;
-    email: string;
-    dateofbirth: string;
-    weblink: string;
-    bio: string;
-    profilepic: string;
-    userName: string;
-    backgroundImage: string;
-    gender: string;
-    location: string;
-  }>({
-    name: "",
-    email: "",
-    dateofbirth: "",
-    weblink: "",
-    bio: "",
-    profilepic:
-      "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=",
-    userName: "",
-    backgroundImage: "",
-    gender: "",
-    location: "",
-  });
 
   const fetchUser = async () => {
     try {
-      const res = await axios.post("/api/users/fetch/profile", {
-        userName: "",
-      });
-      const data = res.data.user;
-      setUserInfo({
-        name: data.name,
-        userName: data.userName,
-        email: data.email,
-        profilepic: data.profilePic,
-        backgroundImage: data.backgroundImage,
-        dateofbirth: data.dateOfBirth,
-        gender: data.gender,
-        weblink: data.webLink,
-        location: data.location,
-        bio: data.bio,
-      });
+      getUser("");
       return;
-    } catch (e) {
-      toast.error("Error occured");
+    } finally {
       return;
     }
   };
 
   const handleOnChange = async (changeEvent: any) => {
     try {
+      setDisabled(true);
       const reader = new FileReader();
       reader.onload = function (onLoadEvent) {
         setImageSrc(onLoadEvent.target?.result);
@@ -83,6 +45,8 @@ const EditProfile = () => {
     } catch (e) {
       console.log(e);
       return;
+    } finally {
+      setDisabled(false);
     }
   };
 
@@ -97,12 +61,12 @@ const EditProfile = () => {
     dateofbirth,
     weblink,
     bio,
-    profilepic,
-    userName,
+    profilePic,
+    username,
     backgroundImage,
     gender,
     location,
-  } = userInfo;
+  } = userState;
 
   return (
     <>
@@ -120,7 +84,7 @@ const EditProfile = () => {
           <Image
             alt="profilepic"
             className="rounded-full mb-5"
-            src={profilepic}
+            src={profilePic}
             width={200}
             height={300}
           />
@@ -140,6 +104,7 @@ const EditProfile = () => {
               type="file"
               className="hidden"
               name="file"
+              disabled={disabled}
             />
           </form>
         </div>
@@ -158,6 +123,12 @@ const EditProfile = () => {
               className="bg-transparent border text-white border-white  text-sm rounded-lg block w-full p-2.5 outline-none"
               required
               defaultValue={name}
+              onChange={(e) => {
+                setuserState({
+                  ...userState,
+                  name: e.target.value,
+                });
+              }}
             />
           </div>
           <div className="mb-5">
@@ -173,6 +144,12 @@ const EditProfile = () => {
               className="bg-transparent border text-white border-white  text-sm rounded-lg block w-full p-2.5 outline-none"
               required
               defaultValue={bio}
+              onChange={(e) => {
+                setuserState({
+                  ...userState,
+                  bio: e.target.value,
+                });
+              }}
             />
           </div>
           <div className="mb-5">
@@ -187,7 +164,7 @@ const EditProfile = () => {
               id="link"
               className="bg-transparent border text-white border-white  text-sm rounded-lg block w-full p-2.5 outline-none"
               required
-              defaultValue={userName}
+              defaultValue={username}
               disabled
             />
           </div>
@@ -201,9 +178,15 @@ const EditProfile = () => {
             <input
               type="text"
               id="link"
-              className="bg-transparent border text-blue-800 border-white  text-sm rounded-lg block w-full p-2.5 outline-none"
+              className="bg-transparent border text-blue-700 border-white  text-sm rounded-lg block w-full p-2.5 outline-none"
               required
               defaultValue={weblink}
+              onChange={(e) => {
+                setuserState({
+                  ...userState,
+                  weblink: e.target.value,
+                });
+              }}
             />
           </div>
           <div className="mb-5">
@@ -217,8 +200,8 @@ const EditProfile = () => {
                 className="hidden"
                 checked={gender === "male"}
                 onChange={(e: any) => {
-                  setUserInfo({
-                    ...userInfo,
+                  setuserState({
+                    ...userState,
                     gender: e.target.value,
                   });
                 }}
@@ -239,8 +222,8 @@ const EditProfile = () => {
                 className="hidden"
                 checked={gender === "female"}
                 onChange={(e: any) => {
-                  setUserInfo({
-                    ...userInfo,
+                  setuserState({
+                    ...userState,
                     gender: e.target.value,
                   });
                 }}
@@ -261,8 +244,8 @@ const EditProfile = () => {
                 className="hidden"
                 checked={gender === "other"}
                 onChange={(e: any) => {
-                  setUserInfo({
-                    ...userInfo,
+                  setuserState({
+                    ...userState,
                     gender: e.target.value,
                   });
                 }}
@@ -301,6 +284,12 @@ const EditProfile = () => {
               className="bg-transparent border text-white border-white  text-sm rounded-lg block w-full p-2.5 outline-none"
               required
               defaultValue={location}
+              onChange={(e) => {
+                setuserState({
+                  ...userState,
+                  location: e.target.value,
+                });
+              }}
             />
           </div>
           <div className="mb-5">

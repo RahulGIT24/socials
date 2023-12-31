@@ -7,14 +7,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Spinner from "./Spinner";
+import { useUserContext } from "@/context/usercontext";
 
 const Sidebar = () => {
+  const { userState, getUser } = useUserContext();
   const [loader, setLoader] = useState(true);
-  const [name, setName] = useState<string>("");
-  const [userName, setUsername] = useState<string>("");
-  const [pic, setPic] = useState<string>(
-    "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
-  );
 
   const router = useRouter();
   const onLogout = async () => {
@@ -28,29 +25,17 @@ const Sidebar = () => {
     }
   };
 
-  const getUserInfo = async () => {
+  async function getUserInfo() {
     try {
-      const res = await axios.post("/api/users/fetch/profile", {
-        userName: "",
-      });
-      setName("Hi, " + res.data.user.name.split(" ")[0]);
-      setUsername(res.data.user.userName);
-      setPic(res.data.user.profilePic);
-      return;
-    } catch (e: any) {
-      toast.error(e.response.data.error);
-      if (e.response.data.error === "Session Expired") {
-        router.push("/login");
-      }
-      return;
+      getUser("");
     } finally {
       setLoader(false);
     }
-  };
+  }
 
   useEffect(() => {
     getUserInfo();
-  }, [userName || name || pic]);
+  }, []);
 
   return (
     <>
@@ -88,9 +73,9 @@ const Sidebar = () => {
           >
             <div className="h-full px-3 py-4 overflow-y-auto bg-gray-950">
               <div className="flex justify-center items-center mb-12 flex-col">
-                <Link href={`/profile/${userName}`}>
+                <Link href={`/profile/${userState.username.slice(1)}`}>
                   <Image
-                    src={pic}
+                    src={userState.profilePic}
                     width={80}
                     height={50}
                     alt="profile-pic"
@@ -100,10 +85,10 @@ const Sidebar = () => {
                 <hr />
                 <div className="flex justify-center items-center flex-col mt-4">
                   <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-                    {name}
+                    {userState.name.split(" ")[0]}
                   </span>
                   <span className="self-center text-sm font-mono whitespace-nowrap dark:text-gray-400">
-                    {"@" + userName}
+                    {userState.username}
                   </span>
                 </div>
               </div>

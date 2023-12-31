@@ -3,6 +3,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { UserContextProvider } from "@/context/usercontext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
+        <UserContextProvider>{children}</UserContextProvider>
         <Toaster position="bottom-center" reverseOrder={false} />
       </body>
     </html>
