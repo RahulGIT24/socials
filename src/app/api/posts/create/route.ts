@@ -11,7 +11,6 @@ interface RequestBody {
     pic: string;
 }
 
-// TODO
 export async function POST(request: NextRequest) {
     try {
         connect();
