@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
         }
 
         const newPost = new Post({
+            name:user.name,
             description: desc,
             image: pic,
             tags: tags,
