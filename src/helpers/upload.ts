@@ -14,7 +14,7 @@ export async function upload({ event, setDisabled, setProgress, postImage, setUp
         }
 
         setProgress(70);
-        const response = await axios.post("/api/users/update/profileimage", {
+        await axios.post("/api/users/update/profileimage", {
             url: res,
         });
         setProgress(100);

@@ -9,12 +9,10 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 const Profile = ({ params }: any) => {
   const { getUser, userState } = useUserContext();
@@ -39,8 +37,10 @@ const Profile = ({ params }: any) => {
 
   const getUserByName = async () => {
     try {
-      setLoading(true);
-      getUser(params.username);
+      if (username === "" || name === "" || profilePic === "") {
+        setLoading(true);
+        getUser(params.username);
+      }
       const { loggedIn, sameUser }: any = await isSameUser(userName);
       if (loggedIn === true && sameUser === true) {
         setButton("Edit Profile");
@@ -106,24 +106,32 @@ const Profile = ({ params }: any) => {
               height={100}
             />
             <p className="text-3xl text-center">{name}</p>
-            <p className="font-extralight text-gray-500 font-serif text-center">
+            <p className="font-extralight text-gray-500 font-serif text-center mb-5">
               {username}
             </p>
-            {bio && `<p className="mt-5 font-mono">{bio}</p>`}
-            <div className="flex justify-center items-center mb-12 mt-5">
-              {location &&
-                `<p className="mr-4">
-            <FontAwesomeIcon icon={faLocationDot} className="mr-2" />
-            ${location}
-          </p>`}
+            {bio && <p className="font-mono text-lg w-3/4 mb-9">{bio}</p>}
 
-              {webLink &&
-                ` <p className="mr-4">
-            <FontAwesomeIcon icon={faLink} className="mr-2" />
-            <Link href=${webLink} className="text-blue-500">
-              Visit My Website
-            </Link>
-          </p>`}
+            <div className="flex justify-center items-center mb-6 mt-5">
+              {location && (
+                <p className="mr-4">
+                  <FontAwesomeIcon icon={faLocationDot} className="mr-2" />
+                  {location}
+                </p>
+              )}
+
+              {/* {webLink && (
+                <p className="mr-4">
+                  <FontAwesomeIcon icon={faLink} className="mr-2" />
+                  <a
+                    href={`https://${webLink}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500"
+                  >
+                    Visit My Website
+                  </a>
+                </p>
+              )} */}
 
               <p>
                 <FontAwesomeIcon icon={faCalendarDays} className="mr-2" />
@@ -137,7 +145,10 @@ const Profile = ({ params }: any) => {
               <p className="mr-4">{followers.length} Followers</p>
               <p className="mr-4">{following.length} Following</p>
               <button
-                className="bg-white border text-black px-12 py-2.5 rounded-full hover:bg-black hover:text-white hover:border hover:transition-transform hover:transform hover:scale-110 duration-300 ease-in-out"
+                className="bg-white border text-black px-6 md:px-12 py-2 md:py-2.5 rounded-full 
+                hover:bg-black hover:text-white hover:border 
+                hover:transition-transform hover:transform hover:scale-110 
+                duration-300 ease-in-out"
                 onClick={handleControl}
               >
                 {button}

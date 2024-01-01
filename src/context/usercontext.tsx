@@ -66,7 +66,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
         followers: res.data.user.followers,
         joined: res.data.user.createdAt,
         location: res.data.user.location,
-        webLink: res.data.user.weblink,
+        webLink: res.data.user.webLink,
         following: res.data.user.following,
         dateofbirth: res.data.user.dateOfBirth,
         gender: res.data.user.gender,
