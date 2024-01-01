@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         const response = NextResponse.json({
             message: "Welcome to Socials",
             token,
-            expires: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days in milliseconds
+            expires: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
             success: true
         })
 

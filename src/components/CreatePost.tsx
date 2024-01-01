@@ -12,6 +12,8 @@ import LoadingBar from "react-top-loading-bar";
 
 const CreatePost = () => {
   const router = useRouter();
+  const [count, setCount] = useState<number>(0);
+  const [disabled, setDisabled] = useState(false);
   const [progress, setProgress] = useState<number>(0);
   const [imageSrc, setImageSrc] = useState<any>(null);
   const [uploadData, setUploadData] = useState<any>(null);
@@ -19,13 +21,11 @@ const CreatePost = () => {
   const [post, setPost] = useState<{
     desc: string;
     tags: string;
-    pic: string;
   }>({
     desc: "",
     tags: "",
-    pic: "",
   });
-  const { desc, tags, pic } = post;
+  const { desc, tags } = post;
 
   function handleOnChange(changeEvent: any) {
     const reader = new FileReader();
@@ -57,7 +57,13 @@ const CreatePost = () => {
       toast.error("Gave atleast pic or description of post");
       return;
     }
+    if (desc.length > 200) {
+      toast.error("Caption length is limited to 200 words only!");
+      return;
+    }
+    // if(tags.length )
     try {
+      setDisabled(true);
       setProgress(30);
       const link = await uploadImage();
       setProgress(70);
@@ -75,6 +81,7 @@ const CreatePost = () => {
       return;
     } finally {
       setProgress(100);
+      setDisabled(false);
     }
   };
 
@@ -98,18 +105,22 @@ const CreatePost = () => {
               name="post"
               id="post"
               cols={80}
-              rows={7}
+              rows={5}
               onChange={(e) => {
                 setPost({
                   ...post,
                   desc: e.target.value,
                 });
+                setCount(e.target.value.length);
               }}
               placeholder="Caption"
               className="text-white bg-transparent border border-gray-700 rounded-xl px-5 pt-4 font-mono text-xl outline-none w-full"
             ></textarea>
+            <div className="count">
+              <p className={`${count > 200 && "text-red-500"}`}>{count}</p>
+            </div>
           </div>
-          <div className="tags px-12">
+          <div className="tags px-12 mt-3">
             <textarea
               name="tags"
               id="tag-input"
@@ -155,6 +166,7 @@ const CreatePost = () => {
           <div className="button w-full px-12 mt-5">
             <button
               className="bg-white border text-black px-8 md:px-12 py-2.5 rounded-full hover:bg-black hover:text-white hover:border hover:transition-transform hover:transform hover:scale-110 duration-300 ease-in-out mb-8 md:mb-28"
+              disabled={disabled}
               onClick={handleSubmit}
             >
               Post
