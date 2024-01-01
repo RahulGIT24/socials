@@ -13,7 +13,7 @@ type ChildProps = {
 };
 
 const Avatar = ({ setProfilePic }: ChildProps) => {
-  const [disabled, setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(false);
   const [progress, setProgress] = useState<number>(0);
   const router = useRouter();
   const [imageSrc, setImageSrc] = useState<any>(null);
@@ -32,6 +32,7 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
 
   async function handleOnSubmit(event: any) {
     try {
+      setDisabled(true);
       await upload({
         event,
         setDisabled,
@@ -47,6 +48,8 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
     } catch (e) {
       toast.error("Internal server error");
       return;
+    }finally{
+      setDisabled(false);
     }
   }
 
@@ -97,6 +100,7 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
                 type="file"
                 className="hidden"
                 name="file"
+                disabled={disabled}
               />
 
               {imageSrc && !uploadData && (
@@ -110,7 +114,6 @@ const Avatar = ({ setProfilePic }: ChildProps) => {
             <button
               className="rounded-3xl border border-white py-3 font-semibold hover:bg-white hover:text-black hover:transition-all duration-200 ease-in-out hover:scale-95 px-16"
               onClick={handleSkip}
-              disabled={disabled}
             >
               Skip
             </button>
