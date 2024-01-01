@@ -17,6 +17,15 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
     },
+    userPic: {
+        type: String,
+        default: ""
+    },
+    userName: {
+        type: String,
+        required: true,
+        match: /^[a-z][a-z0-9_]{0,14}$/,
+    },
     likes: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -45,5 +54,5 @@ const postSchema = new mongoose.Schema({
     },
 })
 
-const Post = mongoose.model("posts", postSchema);
+const Post = mongoose.models.posts || mongoose.model('posts', postSchema);
 export default Post;
