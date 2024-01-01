@@ -11,10 +11,10 @@ interface RequestBody {
     pic: string;
 }
 
-connect();
 // TODO
 export async function POST(request: NextRequest) {
     try {
+        connect();
         const reqBody: RequestBody = await request.json();
         const { desc, tags, pic } = reqBody;
 
@@ -45,11 +45,13 @@ export async function POST(request: NextRequest) {
             description: desc,
             image: pic,
             tags: tags,
-            creator: userId
+            creator: userId,
+            userPic: user.profilePic,
+            userName: user.userName
         })
 
-        // const savedPost = await newPost.save();
-        return NextResponse.json({ message: "Posted Successfully",newPost }, { status: 200 })
+        await newPost.save();
+        return NextResponse.json({ message: "Posted Successfully" }, { status: 200 })
 
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 500 })
