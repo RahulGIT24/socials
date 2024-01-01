@@ -61,7 +61,10 @@ const CreatePost = () => {
       toast.error("Caption length is limited to 200 words only!");
       return;
     }
-    // if(tags.length )
+    if(tags.length>100){
+      toast.error("Tags length is limited to 100 words only!");
+      return;
+    }
     try {
       setDisabled(true);
       setProgress(30);

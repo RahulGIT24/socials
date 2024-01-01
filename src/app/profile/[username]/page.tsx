@@ -1,5 +1,6 @@
 "use client";
 
+import PostCard from "@/components/PostCard";
 import Spinner from "@/components/Spinner";
 import { useUserContext } from "@/context/usercontext";
 import { isSameUser } from "@/helpers/sameuser";
@@ -96,8 +97,8 @@ const Profile = ({ params }: any) => {
       {loading === true ? (
         <Spinner />
       ) : (
-        <section className="w-full">
-          <div className="cover-image flex justify-start items-start flex-col ml-10">
+        <section className="w-full flex justify-center items-center flex-col">
+          <div className="cover-image flex justify-start items-start flex-col ml-10 w-4/5">
             <Image
               className="rounded-full mt-12 mb-6"
               alt="profile-pic"
@@ -154,8 +155,11 @@ const Profile = ({ params }: any) => {
                 {button}
               </button>
             </div>
+          <div className="w-full h-2 bg-white mb-12"></div>
           </div>
-          <hr />
+          <div className="flex justify-start items-start flex-col ml-10 w-4/5">
+          <PostCard/>
+          </div>
         </section>
       )}
     </>

@@ -11,6 +11,9 @@ interface UserContextValue {
   userState: any;
   setuserState: (value: any) => void;
   getUser: (value: any) => void;
+  post:any,
+  setPost: (value:any)=>void;
+  fetchPost: (value:string,value1:string)=>any;
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
@@ -32,7 +35,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     webLink: string;
     dateofbirth: string;
     gender: string;
-    email:string
+    email: string;
   }>({
     id: "",
     backgroundImage: "",
@@ -48,8 +51,11 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     following: [],
     dateofbirth: "",
     gender: "",
-    email:""
+    email: "",
   });
+
+  // post state
+  const [post, setPost] = useState<any>([]);
 
   const getUser = async (userName: any) => {
     try {
@@ -78,10 +84,28 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     }
   };
 
+  // function to fetchposts
+  const fetchPost = async (type: string, postId?: string) => {
+    try {
+      const post = await axios.post("/api/posts/fetch", {
+        type,
+        postId,
+      });
+      setPost(post);
+      return post;
+    } catch (e: any) {
+      toast.error(e.response.data.error);
+      return;
+    }
+  };
+
   const contextValue: UserContextValue = {
     userState,
     setuserState,
     getUser,
+    post,
+    setPost,
+    fetchPost
   };
 
   return (
