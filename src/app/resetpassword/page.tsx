@@ -36,7 +36,7 @@ const ResetPassword = () => {
 
       setProgress(50);
       setDisabled(true);
-      await axios.post("/api/users/auth/resetpassword", {
+      await axios.put("/api/users/auth/resetpassword", {
         token,
         password,
       });
