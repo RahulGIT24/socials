@@ -6,7 +6,7 @@ import Post from "@/models/postModel";
 
 export async function DELETE(request: NextRequest, req: NextApiRequest) {
     try {
-        const { id } = req.query;
+        const id  = req.params.id;
         const token: any = request.cookies.get("token");
         if (!token) {
             return NextResponse.json({ error: "Token not found" }, { status: 401 });

@@ -7,9 +7,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
-const PostCard = ({ deletePost, post }: any) => {
-  const { description, image, video, userName, userPic, name } = post;
+const PostCard = ({ deletePost, post, delPost }: any) => {
+  const { description, image, video, userName, userPic, name, _id } = post;
   const word = description.split(" ");
+
+  // function to delete post
   return (
     <section className="border border-gray-800 px-3 py-3 rounded-2xl mb-9 w-full">
       <div className="name-image flex items-center">
@@ -59,7 +61,12 @@ const PostCard = ({ deletePost, post }: any) => {
           Share <FontAwesomeIcon icon={faShare} />
         </div>
         {deletePost && (
-          <div className="delete cursor-pointer">
+          <div
+            className="delete cursor-pointer ml-2"
+            onClick={() => {
+              delPost(_id);
+            }}
+          >
             <FontAwesomeIcon icon={faTrash} />
           </div>
         )}

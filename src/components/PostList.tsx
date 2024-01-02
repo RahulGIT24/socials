@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import PostCard from "./PostCard";
 import { useUserContext } from "@/context/usercontext";
 import { InfinitySpin } from "react-loader-spinner";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const PostList = ({ deletePost, id }: any) => {
   const [posts, setPosts] = useState([]);
@@ -12,20 +14,32 @@ const PostList = ({ deletePost, id }: any) => {
 
   async function getPost() {
     try {
-      if (posts.length == 0) {
-        setLoading(true);
-        const res = await fetchPost("USERID", "", id);
-        setPosts(res.data.posts);
-        return;
-      }
+      setLoading(true);
+      const res = await fetchPost("USERID", "", id);
+      setPosts(res.data.posts);
+      return;
     } finally {
       setLoading(false);
       return;
     }
   }
 
+  const delPost = async (id: string) => {
+    try {
+      const res = await axios.delete(`/api/posts/delete/${id}`);
+      getPost();
+      toast.success(res.data.message);
+      return;
+    } catch (e: any) {
+      toast.error(e.response.data.error);
+      return;
+    }
+  };
+
   useEffect(() => {
-    getPost();
+    if (posts.length == 0) {
+      getPost();
+    }
   }, []);
 
   if (loading === true) {
@@ -48,7 +62,14 @@ const PostList = ({ deletePost, id }: any) => {
         ))}
       {posts &&
         posts.map((post: any, index: number) => {
-          return <PostCard deletePost={deletePost} key={index} post={post} />;
+          return (
+            <PostCard
+              deletePost={deletePost}
+              key={index}
+              post={post}
+              delPost={delPost}
+            />
+          );
         })}
     </>
   );
