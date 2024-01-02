@@ -1,6 +1,7 @@
 "use client";
 
 import PostCard from "@/components/PostCard";
+import PostList from "@/components/PostList";
 import Spinner from "@/components/Spinner";
 import { useUserContext } from "@/context/usercontext";
 import { isSameUser } from "@/helpers/sameuser";
@@ -16,11 +17,12 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const Profile = ({ params }: any) => {
-  const { getUser, userState } = useUserContext();
+  const { getUser, userState} = useUserContext();
   const userName = params.username;
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
   const [button, setButton] = useState<string>("Sign in");
+  const [deletePost, setDeletePost] = useState<boolean>(false);
 
   const {
     id,
@@ -38,13 +40,14 @@ const Profile = ({ params }: any) => {
 
   const getUserByName = async () => {
     try {
-      if (username === "" || name === "" || profilePic === "") {
+      if (username === "" || name === "" || profilePic === "" || id === "") {
         setLoading(true);
         getUser(params.username);
       }
       const { loggedIn, sameUser }: any = await isSameUser(userName);
       if (loggedIn === true && sameUser === true) {
         setButton("Edit Profile");
+        setDeletePost(true);
       } else if (loggedIn === true && sameUser === false) {
         setButton("Follow");
       }
@@ -52,6 +55,10 @@ const Profile = ({ params }: any) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    getUserByName();
+  }, []);
 
   const handleControl = () => {
     if (button === "Sign in") {
@@ -63,10 +70,6 @@ const Profile = ({ params }: any) => {
       return;
     }
   };
-
-  useEffect(() => {
-    getUserByName();
-  }, []);
 
   function getMonthName(monthNumber: number) {
     const months = [
@@ -155,10 +158,10 @@ const Profile = ({ params }: any) => {
                 {button}
               </button>
             </div>
-          <div className="w-full h-2 bg-white mb-12"></div>
+            <div className="w-full h-2 bg-white mb-12"></div>
           </div>
           <div className="flex justify-start items-start flex-col ml-10 w-4/5">
-          <PostCard/>
+            <PostList deletePost={deletePost} id={id}/>
           </div>
         </section>
       )}

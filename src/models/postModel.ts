@@ -13,9 +13,6 @@ const postSchema = new mongoose.Schema({
     video: {
         type: String,
     },
-    tags: {
-        type: String,
-    },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"

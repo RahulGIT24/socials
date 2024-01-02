@@ -2,52 +2,54 @@ import Post from "@/models/postModel";
 import connect from "@/config/db";
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModel";
-import jwt from "jsonwebtoken"
 
 interface RequestBody {
     type: string,
     postId: string,
+    userId: string,
 }
 
 connect();
+
+const getAllPosts = async () => {
+    return Post.find({});
+};
+
+const getPostById = async (postId: string) => {
+    return Post.findById(postId);
+};
+
+const getPostsByUserId = async (userId: string) => {
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new Error("Invalid user id");
+    }
+    return Post.find({ creator: userId });
+};
+
+
 export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
-        const { type }: RequestBody = reqBody;
+        const { type, postId, userId }: RequestBody = reqBody;
 
-        if (type === "ALL") {
-            const post = await Post.find({});
-            return NextResponse.json({ post }, { status: 200 })
+        switch (type) {
+            case "ALL":
+                const allPosts = await getAllPosts();
+                return NextResponse.json({ posts: allPosts }, { status: 200 });
+
+            case "POSTID":
+                const postById = await getPostById(postId);
+                return NextResponse.json({ post: postById }, { status: 200 });
+
+            case "USERID":
+                const postsByUserId = await getPostsByUserId(userId);
+                return NextResponse.json({ posts: postsByUserId }, { status: 200 });
+
+            default:
+                return NextResponse.json({ error: "Invalid request" }, { status: 400 });
         }
-
-        if (type === "POSTID") {
-            const { postId } = reqBody;
-            const post = await Post.findById(postId);
-            return NextResponse.json({ post }, { status: 200 })
-        }
-
-        if (type === "USERID") {
-            const token: any = request.cookies.get("token");
-            if (!token) {
-                return NextResponse.json({ error: "Token not found" }, { status: 401 });
-            }
-            const decodedToken: string | object = jwt.verify(token.value, process.env.TOKEN_SECRET!);
-            const userId = (decodedToken as { id: string }).id;
-            const user = await User.findById(userId);
-            if (!user) {
-                const res = NextResponse.json({
-                    error: "Session expired"
-                }, { status: 401 })
-                res.cookies.set("token", "", { httpOnly: true, expires: new Date(0) })
-                return res;
-            }
-            const post = await Post.find({ creator: userId });
-            return NextResponse.json({ post }, { status: 200 })
-        }
-
-        return NextResponse.json({ error: "Invalid request" }, { status: 400 });
-
-    } catch (e: any) {
-        return NextResponse.json({ error: e.message }, { status: 500 });
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

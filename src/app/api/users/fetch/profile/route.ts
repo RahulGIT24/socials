@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken"
 import User from "@/models/userModel";
 
+connect();
 export async function POST(request: NextRequest) {
     try {
-        await connect();
         const reqBody = await request.json();
         const { userName } = reqBody;
 

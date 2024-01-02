@@ -18,14 +18,8 @@ const CreatePost = () => {
   const [imageSrc, setImageSrc] = useState<any>(null);
   const [uploadData, setUploadData] = useState<any>(null);
   const [file, setFile]: any = useState(null);
-  const [post, setPost] = useState<{
-    desc: string;
-    tags: string;
-  }>({
-    desc: "",
-    tags: "",
-  });
-  const { desc, tags } = post;
+  const [desc, setDesc] = useState<string>("");
+  const [hashtags, setHashtags] = useState<string[]>([]);
 
   function handleOnChange(changeEvent: any) {
     const reader = new FileReader();
@@ -57,12 +51,8 @@ const CreatePost = () => {
       toast.error("Gave atleast pic or description of post");
       return;
     }
-    if (desc.length > 200) {
-      toast.error("Caption length is limited to 200 words only!");
-      return;
-    }
-    if(tags.length>100){
-      toast.error("Tags length is limited to 100 words only!");
+    if (desc.length > 300) {
+      toast.error("Caption length is limited to 300 words only!");
       return;
     }
     try {
@@ -72,7 +62,6 @@ const CreatePost = () => {
       setProgress(70);
       const res = await axios.post("/api/posts/create", {
         desc: desc,
-        tags: tags,
         pic: link,
       });
       toast.success(res.data.message);
@@ -86,6 +75,19 @@ const CreatePost = () => {
       setProgress(100);
       setDisabled(false);
     }
+  };
+
+  const handledescChange = (
+    changeEvent: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const inputValue = changeEvent.target.value;
+    setDesc(inputValue);
+    setCount(inputValue.length);
+
+    const hashtagMatches = inputValue.match(/#\w+/g);
+
+    const spacedHashtags = hashtagMatches?.map((tag) => tag + " ") || [];
+    setHashtags(spacedHashtags);
   };
 
   return (
@@ -109,37 +111,23 @@ const CreatePost = () => {
               id="post"
               cols={80}
               rows={5}
-              onChange={(e) => {
-                setPost({
-                  ...post,
-                  desc: e.target.value,
-                });
-                setCount(e.target.value.length);
-              }}
+              onChange={handledescChange}
+              value={desc}
               placeholder="Caption"
               className="text-white bg-transparent border border-gray-700 rounded-xl px-5 pt-4 font-mono text-xl outline-none w-full"
-            ></textarea>
+            />
+            <div className="hashtags mt-2 px-12 h-2">
+              {hashtags.map((tag, index) => (
+                <span key={index} className="text-blue-500">
+                  {tag}
+                </span>
+              ))}
+            </div>
             <div className="count">
-              <p className={`${count > 200 && "text-red-500"}`}>{count}</p>
+              <p className={`${count > 300 && "text-red-500"}`}>{count}</p>
             </div>
           </div>
-          <div className="tags px-12 mt-3">
-            <textarea
-              name="tags"
-              id="tag-input"
-              cols={92}
-              rows={2}
-              placeholder="Tags for your post (#)"
-              onChange={(e) => {
-                setPost({
-                  ...post,
-                  tags: e.target.value,
-                });
-              }}
-              className="text-gray-300 bg-transparent border border-gray-700 rounded-xl px-5 pt-2 mt-4 mb-7 italic outline-none w-full"
-            ></textarea>
-          </div>
-          <div className="functions w-full mb-6 px-12">
+          <div className="functions w-full mb-6 px-12 mt-12">
             <form method="post" onChange={handleOnChange}>
               <label
                 htmlFor="file-input"
