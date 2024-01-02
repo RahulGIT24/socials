@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"
 import { NextApiRequest } from "next";
 import Post from "@/models/postModel";
 
-export async function POST(request: NextRequest, req: NextApiRequest) {
+export async function DELETE(request: NextRequest, req: NextApiRequest) {
     try {
         const { id } = req.query;
         const token: any = request.cookies.get("token");

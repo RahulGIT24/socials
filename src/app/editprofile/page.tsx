@@ -47,7 +47,7 @@ const EditProfile = () => {
     try {
       setDisabled(true);
       setProgress(45);
-      await axios.post("/api/users/update/profile", {
+      await axios.put("/api/users/update/profile", {
         name: name,
         bio: bio,
         weblink: weblink,
