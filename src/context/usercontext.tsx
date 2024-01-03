@@ -11,7 +11,7 @@ interface UserContextValue {
   userState: any;
   setuserState: (value: any) => void;
   getUser: (value: any) => void;
-  fetchPost: (value: string, value1: string, value2: string) => any;
+  fetchPost: (value: string, value1: string, value2: string,value3:number) => any;
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
@@ -80,9 +80,9 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
   };
 
   // function to fetchposts
-  const fetchPost = async (type: string, postId: string, userId: string) => {
+  const fetchPost = async (type: string, postId: string, userId: string, page:number) => {
     try {
-      const post = await axios.post("/api/posts/fetch", {
+      const post = await axios.post(`/api/posts/fetch/${page}`, {
         type,
         postId,
         userId,

@@ -64,8 +64,14 @@ const CreatePost = () => {
         desc: desc,
         pic: link,
       });
+      setDesc("");
+      setCount(0);
+      setImageSrc(null);
+      setUploadData(null);
+      setFile(null);
       toast.success(res.data.message);
-      router.push(`/`);
+      setHashtags([]);
+      // router.push(`/`);
       return;
     } catch (e: any) {
       console.log(e);

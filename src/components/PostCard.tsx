@@ -8,8 +8,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
 const PostCard = ({ deletePost, post, delPost }: any) => {
-  const { description, image, video, userName, userPic, name, _id } = post;
+  const { description, image, video, userName, userPic, name, _id,createdAt } = post;
   const word = description.split(" ");
+  const dateTime = new Date(createdAt);
 
   // function to delete post
   return (
@@ -22,9 +23,10 @@ const PostCard = ({ deletePost, post, delPost }: any) => {
           width={50}
           height={50}
         />
-        <div>
+        <div className="flex items-center">
           <p className="font-bold text-lg">{name}</p>
-          <p className="font-extralight text-sm">@{userName}</p>
+          <p className="font-extralight text-sm mx-2">@{userName}</p>
+          <p className="font-extralight text-sm mx-2">{dateTime.toString()}</p>
         </div>
       </div>
       {description && (
