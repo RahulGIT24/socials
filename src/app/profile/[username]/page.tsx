@@ -1,6 +1,5 @@
 "use client";
 
-import PostCard from "@/components/PostCard";
 import PostList from "@/components/PostList";
 import Spinner from "@/components/Spinner";
 import { useUserContext } from "@/context/usercontext";
