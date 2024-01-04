@@ -21,7 +21,7 @@ export async function GET(request: NextRequest, req: NextApiRequest) {
         }
 
         // Making search
-        const keyword = req.params.username ? { userName: { $regex: req.params.username, $options: "i" } } : {};
+        const keyword = { userName: { $regex: req.params.username, $options: "i" } };
 
         const users = await User.find(keyword).find({ _id: { $ne: userId } }).select('-password');
 
