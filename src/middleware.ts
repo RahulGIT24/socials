@@ -23,5 +23,6 @@ export const config = {
         '/signup',
         '/editprofile',
         '/create-post',
+        '/search'
     ],
 }
