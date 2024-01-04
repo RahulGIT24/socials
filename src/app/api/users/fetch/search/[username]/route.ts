@@ -8,6 +8,10 @@ connect();
 export async function GET(request: NextRequest, req: NextApiRequest) {
     try {
 
+        if (req.params.username && req.params.username[0] === '@') {
+            req.params.username = req.params.username.slice(1);
+        }
+
         // Checking if user exists
         const token: any = request.cookies.get("token");
         if (!token) {

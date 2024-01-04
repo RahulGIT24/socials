@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const Profile = ({ params }: any) => {
-  const { getUser, userState} = useUserContext();
+  const { getUser, userState } = useUserContext();
   const userName = params.username;
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -39,10 +39,8 @@ const Profile = ({ params }: any) => {
 
   const getUserByName = async () => {
     try {
-      if (username === "" || name === "" || profilePic === "" || id === "") {
-        setLoading(true);
-        getUser(params.username);
-      }
+      setLoading(true);
+      getUser(params.username);
       const { loggedIn, sameUser }: any = await isSameUser(userName);
       if (loggedIn === true && sameUser === true) {
         setButton("Edit Profile");
@@ -160,7 +158,7 @@ const Profile = ({ params }: any) => {
             <div className="w-full h-2 bg-white mb-12"></div>
           </div>
           <div className="flex justify-start items-start flex-col ml-10 w-4/5">
-            <PostList deletePost={deletePost} id={id}/>
+            <PostList deletePost={deletePost} id={id} />
           </div>
         </section>
       )}

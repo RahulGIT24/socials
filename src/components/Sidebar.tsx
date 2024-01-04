@@ -11,7 +11,8 @@ import { useUserContext } from "@/context/usercontext";
 import {
   faArrowLeft,
   faImages,
-  faPlus,
+  faMagnifyingGlass,
+  faPlus, 
   faRightFromBracket,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -37,13 +38,7 @@ const Sidebar = () => {
 
   async function getUserInfo() {
     try {
-      if (
-        userState.username === "" ||
-        userState.name === "" ||
-        userState.profilePic === ""
-      ) {
-        getUser("");
-      }
+      getUser("");
     } finally {
       setLoader(false);
     }
@@ -55,7 +50,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getUserInfo();
-  }, []);
+  }, [userState]);
 
   return (
     <>
@@ -129,6 +124,17 @@ const Sidebar = () => {
               >
                 <FontAwesomeIcon icon={faImages} />
                 <span className="ms-3">Posts</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/search"
+                className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group ${
+                  pathname === "/search" && "bg-gray-100 dark:bg-gray-700"
+                }`}
+              >
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                <span className="ms-3">Search</span>
               </Link>
             </li>
             <li>
