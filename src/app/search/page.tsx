@@ -21,7 +21,7 @@ const Search = () => {
 
   const searchforUsers = async () => {
     if (search === "") {
-        setSearchResults([]);
+      setSearchResults([]);
       return;
     }
     try {
@@ -55,12 +55,13 @@ const Search = () => {
           </div>
         )}
         {searchResults &&
-          searchResults.map((item: any, index: number) => (
+          searchResults.map((item: any) => (
             <Link
+              key={item._id}
               href={`/profile/${item.userName}`}
               className="w-full flex justify-center items-center flex-col"
             >
-              <SearchCard user={item} key={index} />
+              <SearchCard user={item} />
             </Link>
           ))}
       </div>
