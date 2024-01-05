@@ -3,6 +3,7 @@
 import PostList from "@/components/PostList";
 import Spinner from "@/components/Spinner";
 import { useUserContext } from "@/context/usercontext";
+import { isFollowed } from "@/helpers/isFollowed";
 import { isSameUser } from "@/helpers/sameuser";
 import {
   faCalendarDays,
@@ -10,18 +11,25 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import LoadingBar from "react-top-loading-bar";
 
 const Profile = ({ params }: any) => {
   const { getUser, userState } = useUserContext();
   const userName = params.username;
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-  const [button, setButton] = useState<string>("Sign in");
   const [deletePost, setDeletePost] = useState<boolean>(false);
+  const [followBtn, setFollowBtn] = useState<string>("Follow");
+  const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
+  const [sameUser, setSameUser] = useState<boolean | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+  const [followState, setFollowState] = useState<boolean | null>(false);
 
   const {
     id,
@@ -42,11 +50,10 @@ const Profile = ({ params }: any) => {
       setLoading(true);
       getUser(params.username);
       const { loggedIn, sameUser }: any = await isSameUser(userName);
+      setLoggedIn(loggedIn);
+      setSameUser(sameUser);
       if (loggedIn === true && sameUser === true) {
-        setButton("Edit Profile");
         setDeletePost(true);
-      } else if (loggedIn === true && sameUser === false) {
-        setButton("Follow");
       }
     } finally {
       setLoading(false);
@@ -57,14 +64,40 @@ const Profile = ({ params }: any) => {
     getUserByName();
   }, []);
 
-  const handleControl = () => {
-    if (button === "Sign in") {
-      router.push("/login");
-      return;
+  async function check() {
+    const checkforfollow = await isFollowed(userName);
+    if (checkforfollow) {
+      setFollowState(true);
+      setFollowBtn("Unfollow");
     }
-    if (button === "Edit Profile") {
-      router.push("/editprofile");
+  }
+
+  useEffect(() => {
+    check();
+  }, []);
+
+  // Buttons functionality
+  const editProfile = () => {
+    router.push(`/editprofile`);
+  };
+  const signin = () => {
+    router.push(`/login`);
+  };
+  const follow = async () => {
+    try {
+      setProgress(50);
+      await axios.put("/api/users/update/follow", {
+        targetUserid: id,
+      });
+      setFollowState(true);
+      setFollowBtn("Unfollow");
+      toast.success("Followed");
       return;
+    } catch (error: any) {
+      toast.error(error.response.data.error);
+      return;
+    } finally {
+      setProgress(100);
     }
   };
 
@@ -98,6 +131,11 @@ const Profile = ({ params }: any) => {
         <Spinner />
       ) : (
         <section className="w-full flex justify-center items-center flex-col">
+          <LoadingBar
+            color="blue"
+            progress={progress}
+            onLoaderFinished={() => setProgress(0)}
+          />
           <div className="cover-image flex justify-start items-start flex-col ml-10 w-4/5">
             <Image
               className="rounded-full mt-12 mb-6"
@@ -145,15 +183,43 @@ const Profile = ({ params }: any) => {
             <div className="flex justify-center items-center mb-12">
               <p className="mr-4">{followers.length} Followers</p>
               <p className="mr-4">{following.length} Following</p>
-              <button
-                className="bg-white border text-black px-6 md:px-12 py-2 md:py-2.5 rounded-full 
+              {loggedIn === true && sameUser === true && (
+                <button
+                  className="bg-white border text-black px-6 md:px-12 py-2 md:py-2.5 rounded-full 
                 hover:bg-black hover:text-white hover:border 
                 hover:transition-transform hover:transform hover:scale-110 
                 duration-300 ease-in-out"
-                onClick={handleControl}
-              >
-                {button}
-              </button>
+                  onClick={editProfile}
+                >
+                  Edit Profile
+                </button>
+              )}
+              {loggedIn === false && (
+                <button
+                  className="bg-white border text-black px-6 md:px-12 py-2 md:py-2.5 rounded-full 
+                hover:bg-black hover:text-white hover:border 
+                hover:transition-transform hover:transform hover:scale-110 
+                duration-300 ease-in-out"
+                  onClick={signin}
+                >
+                  Sign In
+                </button>
+              )}
+              {loggedIn === true && sameUser === false && (
+                <button
+                  className={`border 
+                hover:transition-transform hover:transform hover:scale-110 
+                px-6 md:px-12 py-2 md:py-2.5 rounded-full 
+                duration-300 ease-in-out ${
+                  followState === true
+                    ? "text-white bg-black hover:bg-white hover:text-black"
+                    : "text-black bg-white hover:text-white hover:bg-black"
+                } `}
+                  onClick={follow}
+                >
+                  {followBtn}
+                </button>
+              )}
             </div>
             <div className="w-full h-2 bg-white mb-12"></div>
           </div>
