@@ -30,16 +30,20 @@ export async function PUT(request: NextRequest) {
         }
 
         if (userId === targetUserid) {
-            return NextResponse.json({ error: "You can't follow yourself" }, { status: 401 });
+            return NextResponse.json({ error: "You can't unfollow yourself" }, { status: 401 });
         }
 
-        user.following.push(targetUserid);
-        targetUser.followers.push(userId);
+        await User.updateOne(
+            { _id: userId },
+            { $pull: { following: targetUserid } }
+        );
 
-        await user.save();
-        await targetUser.save();
+        await User.updateOne(
+            { _id: targetUserid },
+            { $pull: { followers: userId } }
+        );
 
-        return NextResponse.json({ message: "Followed",id:user._id }, { status: 200 });
+        return NextResponse.json({ message: "Unfollowed" }, { status: 200 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }

@@ -20,7 +20,7 @@ import toast from "react-hot-toast";
 import LoadingBar from "react-top-loading-bar";
 
 const Profile = ({ params }: any) => {
-  const { getUser, userState } = useUserContext();
+  const { getUser, userState,setuserState } = useUserContext();
   const userName = params.username;
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -83,7 +83,10 @@ const Profile = ({ params }: any) => {
   const signin = () => {
     router.push(`/login`);
   };
-  const follow = async () => {
+
+  // function to follow
+  // TODO Update the array realtime
+  async function follow() {
     try {
       setProgress(50);
       await axios.put("/api/users/update/follow", {
@@ -98,6 +101,35 @@ const Profile = ({ params }: any) => {
       return;
     } finally {
       setProgress(100);
+    }
+  }
+
+  // function to unfollow
+  // TODO Update the array realtime
+  async function unFollow() {
+    try {
+      setProgress(60);
+      await axios.put("/api/users/update/unfollow", {
+        targetUserid: id,
+      });
+      setFollowState(false);
+      setFollowBtn("Follow");
+      toast.success("Unfollowed");
+      return;
+    } catch (error: any) {
+      toast.error(error.response.data.error);
+      return;
+    } finally {
+      setProgress(100);
+    }
+  }
+
+  const handleFollow = async () => {
+    if (followState === false || null) {
+      await follow();
+    }
+    if (followState === true) {
+      await unFollow();
     }
   };
 
@@ -215,7 +247,7 @@ const Profile = ({ params }: any) => {
                     ? "text-white bg-black hover:bg-white hover:text-black"
                     : "text-black bg-white hover:text-white hover:bg-black"
                 } `}
-                  onClick={follow}
+                  onClick={handleFollow}
                 >
                   {followBtn}
                 </button>
