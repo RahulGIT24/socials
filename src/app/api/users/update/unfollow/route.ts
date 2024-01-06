@@ -41,7 +41,6 @@ export async function PUT(request: NextRequest) {
 
         return NextResponse.json({ message: "Unfollowed", id: user._id }, { status: 200 });
 
-        return NextResponse.json({ message: "Unfollowed" }, { status: 200 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }

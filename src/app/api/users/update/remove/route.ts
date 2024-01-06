@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest) {
         }
 
         if (userId === targetUserid) {
-            return NextResponse.json({ error: "You can't unfollow yourself" }, { status: 401 });
+            return NextResponse.json({ error: "You can't remove yourself" }, { status: 401 });
         }
 
         // Remove the target user from the following array of the logged-in user
@@ -40,9 +40,8 @@ export async function PUT(request: NextRequest) {
         // Remove the logged-in user from the followers array of the target user
         await User.findByIdAndUpdate(targetUserid, { $pull: { following: { id: userId } } });
 
-        return NextResponse.json({ message: "Unfollowed", id: user._id }, { status: 200 });
+        return NextResponse.json({ message: "Follower Removed", id: user._id }, { status: 200 });
 
-        return NextResponse.json({ message: "Unfollowed" }, { status: 200 });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
