@@ -10,6 +10,7 @@ export async function isSameUser(userName: string) {
             sameUser: res.data.isSameUser
         };
     } catch (e) {
+        console.log(e);
         return e;
     }
 }

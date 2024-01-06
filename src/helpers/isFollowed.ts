@@ -26,7 +26,7 @@ export async function isFollowed(userName: string) {
         if (!targetUserid) return;
         if (user._id === targetUserid) return;
         for (let index = 0; index < user.following.length; index++) {
-            if(user.following[index] === targetUserid){
+            if(user.following[index].id === targetUserid){
                 return true;
             }
         }

@@ -222,8 +222,16 @@ const Profile = ({ params }: any) => {
               </p>
             </div>
             <div className="flex justify-center items-center mb-12">
-              <p className="mr-4">{followersCount} Followers</p>
-              <p className="mr-4">{following.length} Following</p>
+              <p className="mr-4">
+                <Link href={`/profile/${userName}/followers`}>
+                  {followersCount} Followers
+                </Link>
+              </p>
+              <p className="mr-4">
+                <Link href={`/profile/${userName}/following`}>
+                  {following.length} Following
+                </Link>
+              </p>
               {loggedIn === true && sameUser === true && (
                 <button
                   className="bg-white border text-black px-6 md:px-12 py-2 md:py-2.5 rounded-full 
@@ -249,12 +257,11 @@ const Profile = ({ params }: any) => {
               {loggedIn === true && sameUser === false && (
                 <button
                   className={`border 
-                hover:transition-transform hover:transform hover:scale-110 
                 px-6 md:px-12 py-2 md:py-2.5 rounded-full 
                 duration-300 ease-in-out ${
                   followState === true
-                    ? "text-white bg-black hover:bg-white hover:text-black"
-                    : "text-black bg-white hover:text-white hover:bg-black"
+                    ? "text-white bg-black"
+                    : "text-black bg-white"
                 } `}
                   onClick={handleFollow}
                 >

@@ -33,8 +33,8 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: "You can't follow yourself" }, { status: 401 });
         }
 
-        user.following.push(targetUserid);
-        targetUser.followers.push(userId);
+        user.following.push({id:targetUserid, userName:targetUser.userName, name:targetUser.name, profilePic:targetUser.profilePic});
+        targetUser.followers.push({id:userId, userName:user.userName, name:user.name, profilePic:user.profilePic});
 
         await user.save();
         await targetUser.save();

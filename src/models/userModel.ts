@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     userName: {
         type: String,
         required: [true, "Please provide a username"],
-        unique: [true,"Username laready exist"],
+        unique: [true, "Username laready exist"],
         match: /^[a-z][a-z0-9_]{0,14}$/,
     },
     email: {
@@ -47,14 +47,24 @@ const userSchema = new mongoose.Schema({
     },
     followers: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "users"
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "users"
+            },
+            name: String,
+            userName: String,
+            profilePic: String
         }
     ],
     following: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "users"
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "users"
+            },
+            name: String,
+            userName: String,
+            profilePic: String
         }
     ],
     blockList: [

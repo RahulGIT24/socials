@@ -33,15 +33,13 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ error: "You can't unfollow yourself" }, { status: 401 });
         }
 
-        await User.updateOne(
-            { _id: userId },
-            { $pull: { following: targetUserid } }
-        );
+        // Remove the target user from the following array of the logged-in user
+        await User.findByIdAndUpdate(userId, { $pull: { following: { id: targetUserid } } });
 
-        await User.updateOne(
-            { _id: targetUserid },
-            { $pull: { followers: userId } }
-        );
+        // Remove the logged-in user from the followers array of the target user
+        await User.findByIdAndUpdate(targetUserid, { $pull: { followers: { id: userId } } });
+
+        return NextResponse.json({ message: "Unfollowed", id: user._id }, { status: 200 });
 
         return NextResponse.json({ message: "Unfollowed" }, { status: 200 });
     } catch (error: any) {
