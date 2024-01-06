@@ -1,6 +1,7 @@
 "use client";
 
 import Following from "@/components/Following";
+import Spinner from "@/components/Spinner";
 import { useUserContext } from "@/context/usercontext";
 import { isSameUser } from "@/helpers/sameuser";
 import Link from "next/link";
@@ -30,24 +31,38 @@ const following = ({ params }: any) => {
 
   useEffect(() => {
     getUserByName();
-  }, [following]);
+  }, []);
 
   return (
     <div className="w-full flex justify-center items-center flex-col max-h-screen">
       <div className="w-3/4 h-16 bg-transparent text-white border-y flex justify-start items-center sticky">
-        <p className="text-2xl ml-2 font-serif">@{params.username}</p>
+        <Link href={`/profile/${params.username}`}>
+          <p className="text-2xl ml-2">@{params.username}</p>
+        </Link>
       </div>
-      {following.map((item: any, index: number) => {
-        return (
-          <Link
-            href={`/profile/${item.userName}`}
-            className="w-full flex justify-center items-center"
-            key={index}
-          >
-            <Following remove={remove} item={item} />
-          </Link>
-        );
-      })}
+      {loading === true && <Spinner />}
+      {loading === false && (
+        <>
+          {following.map((item: any, index: number) => {
+            return (
+              <Link
+                href={`/profile/${item.userName}`}
+                className="w-full flex justify-center items-center"
+                key={index}
+              >
+                <Following remove={remove} item={item} />
+              </Link>
+            );
+          })}
+        </>
+      )}
+      {loading === false && following.length === 0 && (
+        <>
+          <div className="flex justify-center items-center h-screen">
+            <p className="text-4xl font-bold">No Following</p>
+          </div>
+        </>
+      )}
     </div>
   );
 };
