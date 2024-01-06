@@ -20,7 +20,7 @@ import toast from "react-hot-toast";
 import LoadingBar from "react-top-loading-bar";
 
 const Profile = ({ params }: any) => {
-  const { getUser, userState,setuserState } = useUserContext();
+  const { getUser, userState, setuserState } = useUserContext();
   const userName = params.username;
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
@@ -43,6 +43,7 @@ const Profile = ({ params }: any) => {
     location,
     webLink,
     bio,
+    followersCount,
   } = userState;
 
   const getUserByName = async () => {
@@ -85,7 +86,6 @@ const Profile = ({ params }: any) => {
   };
 
   // function to follow
-  // TODO Update the array realtime
   async function follow() {
     try {
       setProgress(50);
@@ -95,6 +95,10 @@ const Profile = ({ params }: any) => {
       setFollowState(true);
       setFollowBtn("Unfollow");
       toast.success("Followed");
+      setuserState((prevUserState: any) => ({
+        ...prevUserState,
+        followersCount: followersCount + 1,
+      }));
       return;
     } catch (error: any) {
       toast.error(error.response.data.error);
@@ -105,7 +109,6 @@ const Profile = ({ params }: any) => {
   }
 
   // function to unfollow
-  // TODO Update the array realtime
   async function unFollow() {
     try {
       setProgress(60);
@@ -115,6 +118,12 @@ const Profile = ({ params }: any) => {
       setFollowState(false);
       setFollowBtn("Follow");
       toast.success("Unfollowed");
+      if (followersCount > 0) {
+        setuserState((prevUserState: any) => ({
+          ...prevUserState,
+          followersCount: followersCount - 1,
+        }));
+      }
       return;
     } catch (error: any) {
       toast.error(error.response.data.error);
@@ -213,7 +222,7 @@ const Profile = ({ params }: any) => {
               </p>
             </div>
             <div className="flex justify-center items-center mb-12">
-              <p className="mr-4">{followers.length} Followers</p>
+              <p className="mr-4">{followersCount} Followers</p>
               <p className="mr-4">{following.length} Following</p>
               {loggedIn === true && sameUser === true && (
                 <button
