@@ -30,6 +30,7 @@ const Profile = ({ params }: any) => {
   const [sameUser, setSameUser] = useState<boolean | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [followState, setFollowState] = useState<boolean | null>(false);
+  const [disabled, setDisabled] = useState(false);
 
   const {
     id,
@@ -88,6 +89,7 @@ const Profile = ({ params }: any) => {
   // function to follow
   async function follow() {
     try {
+      setDisabled(true);
       setProgress(50);
       await axios.put("/api/users/update/follow", {
         targetUserid: id,
@@ -104,6 +106,7 @@ const Profile = ({ params }: any) => {
       toast.error(error.response.data.error);
       return;
     } finally {
+      setDisabled(false);
       setProgress(100);
     }
   }
@@ -111,6 +114,7 @@ const Profile = ({ params }: any) => {
   // function to unfollow
   async function unFollow() {
     try {
+      setDisabled(true);
       setProgress(60);
       await axios.put("/api/users/update/unfollow", {
         targetUserid: id,
@@ -129,6 +133,7 @@ const Profile = ({ params }: any) => {
       toast.error(error.response.data.error);
       return;
     } finally {
+      setDisabled(false);
       setProgress(100);
     }
   }
@@ -263,7 +268,7 @@ const Profile = ({ params }: any) => {
                     ? "text-white bg-black"
                     : "text-black bg-white"
                 } `}
-                  onClick={handleFollow}
+                  onClick={handleFollow} disabled={disabled}
                 >
                   {followBtn}
                 </button>
