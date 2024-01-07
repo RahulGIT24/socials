@@ -11,12 +11,11 @@ import React, { useEffect, useState } from "react";
 const following = ({ params }: any) => {
   const username = params.username;
   const { getUser, userState } = useUserContext();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [remove, setRemove] = useState(false);
 
   const getUserByName = async () => {
     try {
-      setLoading(true);
       getUser(username);
       const { loggedIn, sameUser }: any = await isSameUser(username);
       if (loggedIn === true && sameUser === true) {
@@ -40,7 +39,6 @@ const following = ({ params }: any) => {
           <p className="text-2xl ml-2">@{params.username}</p>
         </Link>
       </div>
-      {loading === true && <Spinner />}
       {loading === false && (
         <>
           {following.map((item: any, index: number) => {
@@ -50,7 +48,11 @@ const following = ({ params }: any) => {
                 className="w-full flex justify-center items-center"
                 key={index}
               >
-                <Following remove={remove} item={item} />
+                <Following
+                  remove={remove}
+                  item={item}
+                  getUser={getUserByName}
+                />
               </Link>
             );
           })}

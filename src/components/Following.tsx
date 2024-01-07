@@ -2,7 +2,7 @@ import axios from "axios";
 import Image from "next/image";
 import React from "react";
 import toast from "react-hot-toast";
-const Following = ({ item, remove }: any) => {
+const Following = ({ item, remove, getUser }: any) => {
 
   // function to unfollow
   async function unFollow(event: any) {
@@ -16,6 +16,7 @@ const Following = ({ item, remove }: any) => {
         targetUserid: item.id,
       });
       toast.success("Unfollowed");
+      getUser();
       return;
     } catch (error: any) {
       toast.error(error.response.data.error);

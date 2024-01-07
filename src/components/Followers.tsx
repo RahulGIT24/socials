@@ -4,7 +4,7 @@ import Image from "next/image";
 import React from "react";
 import toast from "react-hot-toast";
 
-const Followers = ({ item, remove }: any) => {
+const Followers = ({ item, remove,getUser }: any) => {
   // function to unfollow
   async function removeFollower(event: any) {
     // Prevent the default link click behavior
@@ -16,6 +16,7 @@ const Followers = ({ item, remove }: any) => {
       await axios.put("/api/users/update/remove", {
         targetUserid: item.id,
       });
+      getUser();
       toast.success("Removed Successfully");
       return;
     } catch (error: any) {
