@@ -7,7 +7,7 @@ import { InfinitySpin } from "react-loader-spinner";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const PostList = ({ deletePost, id }: any) => {
+const PostList = ({ deletePost, id,loggedIn}: any) => {
   const [posts, setPosts] = useState([]);
   const { fetchPost } = useUserContext();
   const [loading, setLoading] = useState(false);
@@ -77,6 +77,7 @@ const PostList = ({ deletePost, id }: any) => {
             key={index}
             post={post}
             delPost={delPost}
+            loggedIn={loggedIn}
           />
         );
       })}

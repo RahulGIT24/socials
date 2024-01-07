@@ -24,7 +24,6 @@ const Profile = ({ params }: any) => {
   const userName = params.username;
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
-  const [deletePost, setDeletePost] = useState<boolean>(false);
   const [followBtn, setFollowBtn] = useState<string>("Follow");
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [sameUser, setSameUser] = useState<boolean | null>(null);
@@ -54,9 +53,6 @@ const Profile = ({ params }: any) => {
       const { loggedIn, sameUser }: any = await isSameUser(userName);
       setLoggedIn(loggedIn);
       setSameUser(sameUser);
-      if (loggedIn === true && sameUser === true) {
-        setDeletePost(true);
-      }
     } finally {
       setLoading(false);
     }
@@ -277,7 +273,7 @@ const Profile = ({ params }: any) => {
             <div className="w-full h-2 bg-white mb-12"></div>
           </div>
           <div className="flex justify-start items-start flex-col ml-10 w-4/5">
-            <PostList deletePost={deletePost} id={id} />
+            <PostList deletePost={sameUser} id={id} loggedIn={loggedIn}/>
           </div>
         </section>
       )}

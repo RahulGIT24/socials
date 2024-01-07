@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 async function getLoggedInUserId() {
     try {
         const res = await axios.post("/api/users/fetch/profile", { userName: "" });

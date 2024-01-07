@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
-const PostCard = ({ deletePost, post, delPost }: any) => {
+const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
   const {
     description,
     image,
@@ -64,30 +64,32 @@ const PostCard = ({ deletePost, post, delPost }: any) => {
           />
         </div>
       )}
-      <div className="buttons flex items-center mt-4">
-        <div className="like mr-2">
-          <FontAwesomeIcon icon={faHeart} className="mr-2" />
-          {likes.length}
-        </div>
-        <div className="comment mr-2">
-          <FontAwesomeIcon icon={faComment} className="mr-2" />
-          {comments.length}
-        </div>
-        <div className="share mr-2">
-          <FontAwesomeIcon icon={faShare} className="mr-2" />
-          {shares.length}
-        </div>
-        {deletePost && (
-          <div
-            className="delete cursor-pointer ml-2"
-            onClick={() => {
-              delPost(_id);
-            }}
-          >
-            <FontAwesomeIcon icon={faTrash} />
+      {loggedIn && (
+        <div className="buttons flex items-center mt-4">
+          <div className="like mr-2">
+            <FontAwesomeIcon icon={faHeart} className="mr-2" />
+            {likes.length}
           </div>
-        )}
-      </div>
+          <div className="comment mr-2">
+            <FontAwesomeIcon icon={faComment} className="mr-2" />
+            {comments.length}
+          </div>
+          <div className="share mr-2">
+            <FontAwesomeIcon icon={faShare} className="mr-2" />
+            {shares.length}
+          </div>
+          {deletePost && (
+            <div
+              className="delete cursor-pointer ml-2"
+              onClick={() => {
+                delPost(_id);
+              }}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 };
