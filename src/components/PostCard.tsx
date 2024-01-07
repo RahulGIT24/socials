@@ -1,3 +1,6 @@
+"use client";
+
+import { useUserContext } from "@/context/usercontext";
 import {
   faComment,
   faHeart,
@@ -5,9 +8,13 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
+  const { userState } = useUserContext();
   const {
     description,
     image,
@@ -21,8 +28,42 @@ const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
     comments,
     shares,
   } = post;
+  const [likeCount, setLikeCount] = useState<number>(likes.length);
   const word = description.split(" ");
   const dateTime = new Date(createdAt);
+  const { likedPosts } = userState;
+
+  // states
+  const [like, setLike] = useState(false);
+
+  const onLike = async () => {
+    try {
+      const res = await axios.put("/api/posts/like", { postId: _id });
+      setLike(!like);
+      if (res.data.message === "Liked") {
+        setLikeCount(likeCount + 1);
+      } else {
+        setLikeCount(likeCount - 1);
+      }
+    } catch (error: any) {
+      toast.error(error.response.data.error);
+      return;
+    }
+  };
+
+  // check if post is already liked
+  const check = () => {
+    likedPosts.map((item: any) => {
+      if (item === _id) {
+        setLike(true);
+      }
+    });
+    return;
+  };
+
+  useEffect(() => {
+    check();
+  }, [post]);
 
   // function to delete post
   return (
@@ -67,8 +108,12 @@ const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
       {loggedIn && (
         <div className="buttons flex items-center mt-4">
           <div className="like mr-2">
-            <FontAwesomeIcon icon={faHeart} className="mr-2" />
-            {likes.length}
+            <FontAwesomeIcon
+              icon={faHeart}
+              className={`mr-2 ${like && "text-red-700"} cursor-pointer`}
+              onClick={onLike}
+            />
+            {likeCount}
           </div>
           <div className="comment mr-2">
             <FontAwesomeIcon icon={faComment} className="mr-2" />

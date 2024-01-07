@@ -35,6 +35,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     gender: string;
     email: string;
     followersCount:number;
+    likedPosts:[];
   }>({
     id: "",
     backgroundImage: "",
@@ -51,7 +52,8 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     dateofbirth: "",
     gender: "",
     email: "",
-    followersCount: 0
+    followersCount: 0,
+    likedPosts:[]
   });
 
   const getUser = async (userName: any) => {
@@ -74,7 +76,8 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
         dateofbirth: res.data.user.dateOfBirth,
         gender: res.data.user.gender,
         email: res.data.user.email,
-        followersCount: res.data.user.followers.length
+        followersCount: res.data.user.followers.length,
+        likedPosts:res.data.user.LikedPosts
       });
     } catch (e: any) {
       toast.error(e.response.data.error);
