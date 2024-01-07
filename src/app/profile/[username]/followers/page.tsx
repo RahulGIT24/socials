@@ -1,7 +1,6 @@
 "use client";
 
 import Followers from "@/components/Followers";
-import Spinner from "@/components/Spinner";
 import { useUserContext } from "@/context/usercontext";
 import { isSameUser } from "@/helpers/sameuser";
 import Link from "next/link";
