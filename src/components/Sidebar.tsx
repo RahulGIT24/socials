@@ -6,13 +6,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import Spinner from "./Spinner";
 import { useUserContext } from "@/context/usercontext";
 import {
   faArrowLeft,
   faImages,
   faMagnifyingGlass,
-  faPlus, 
+  faPlus,
   faRightFromBracket,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -50,7 +49,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     getUserInfo();
-  }, [userState]);
+  }, []);
 
   return (
     <>

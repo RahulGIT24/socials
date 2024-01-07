@@ -8,7 +8,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
 const PostCard = ({ deletePost, post, delPost }: any) => {
-  const { description, image, video, userName, userPic, name, _id,createdAt } = post;
+  const {
+    description,
+    image,
+    video,
+    userName,
+    userPic,
+    name,
+    _id,
+    createdAt,
+    likes,
+    comments,
+    shares,
+  } = post;
   const word = description.split(" ");
   const dateTime = new Date(createdAt);
 
@@ -54,13 +66,16 @@ const PostCard = ({ deletePost, post, delPost }: any) => {
       )}
       <div className="buttons flex items-center mt-4">
         <div className="like mr-2">
-          Like <FontAwesomeIcon icon={faHeart} />
+          <FontAwesomeIcon icon={faHeart} className="mr-2" />
+          {likes.length}
         </div>
         <div className="comment mr-2">
-          Comment <FontAwesomeIcon icon={faComment} />
+          <FontAwesomeIcon icon={faComment} className="mr-2" />
+          {comments.length}
         </div>
         <div className="share mr-2">
-          Share <FontAwesomeIcon icon={faShare} />
+          <FontAwesomeIcon icon={faShare} className="mr-2" />
+          {shares.length}
         </div>
         {deletePost && (
           <div
