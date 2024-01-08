@@ -10,6 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -113,15 +114,11 @@ const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
               className={`mr-2 ${like && "text-red-700"} cursor-pointer`}
               onClick={onLike}
             />
-            {likeCount}
           </div>
-          <div className="comment mr-2">
-            <FontAwesomeIcon icon={faComment} className="mr-2" />
-            {comments.length}
-          </div>
-          <div className="share mr-2">
-            <FontAwesomeIcon icon={faShare} className="mr-2" />
-            {shares.length}
+          <div className="comment">
+            <Link href={`/comments/${_id}`}>
+              <FontAwesomeIcon icon={faComment} className="mr-2" />
+            </Link>
           </div>
           {deletePost && (
             <div
@@ -135,6 +132,18 @@ const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
           )}
         </div>
       )}
+      <div className="mt-4 flex">
+        <p>
+          <Link href={`/likes/${_id}`}>
+            {likeCount} <b>{likeCount == 1 ? "Like" : "Likes"}</b>
+          </Link>
+        </p>
+        <p className="ml-2">
+          <Link href={`/comments/${_id}`}>
+            {comments.length} <b>Comments</b>
+          </Link>
+        </p>
+      </div>
     </section>
   );
 };
