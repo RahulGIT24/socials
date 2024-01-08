@@ -6,11 +6,13 @@ import { useUserContext } from "@/context/usercontext";
 import axios from "axios";
 import toast from "react-hot-toast";
 import getLikedPosts from "@/helpers/likedPosts";
+import { isSameUser } from "@/helpers/sameuser";
 
-const PostList = ({ deletePost, id,loggedIn}: any) => {
+const PostList = ({ deletePost, id}: any) => {
   const [posts, setPosts] = useState<[]>([]);
   const { fetchPost } = useUserContext();
   const [loading, setLoading] = useState(false);
+  const [loggedIn,setLoggedIn] = useState<boolean>(false);
   // const [page, setPage] = useState<number>(1);
   const [likedPosts,setLikedPosts] = useState<[]>([]);
 
@@ -20,9 +22,13 @@ const PostList = ({ deletePost, id,loggedIn}: any) => {
       const res = await fetchPost("USERID", "", id, 0);
       const post = res.data.posts;
       setPosts(post);
-      const likedP = await getLikedPosts();
-      setLikedPosts(likedP);
       // setPage(page + 1);
+      const {loggedIn}:any = await isSameUser("");
+      setLoggedIn(loggedIn);
+      if(loggedIn){
+        const likedP = await getLikedPosts();
+        setLikedPosts(likedP);
+      }
       return;
     } catch (e) {
       return;

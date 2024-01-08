@@ -62,7 +62,9 @@ const PostCard = ({ deletePost, post, delPost, loggedIn,likedPosts }: any) => {
   };
 
   useEffect(() => {
-    check();
+    if(loggedIn){
+      check();
+    }
   }, []);
 
   // function to delete post

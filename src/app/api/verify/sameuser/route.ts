@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
             return res;
         }
 
+        if(!userName || userName === ""){
+            return NextResponse.json({ loggedIn: true, isSameUser: false }, { status: 200 })
+        } 
+
         const otherUser = await User.findOne({ userName });
         if (!otherUser) {
             return NextResponse.json({ error: "The user you requested is not existed" }, { status: 400 })
