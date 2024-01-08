@@ -71,7 +71,7 @@ const CreatePost = () => {
       setFile(null);
       toast.success(res.data.message);
       setHashtags([]);
-      // router.push(`/`);
+      router.push(`/`);
       return;
     } catch (e: any) {
       console.log(e);
