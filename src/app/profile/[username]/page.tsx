@@ -251,7 +251,7 @@ const Profile = ({ params }: any) => {
             <div className="w-full h-2 bg-white mb-12"></div>
           </div>
           <div className="flex justify-start items-start flex-col ml-10 w-4/5">
-            <PostList deletePost={sameUser} id={id} loggedIn={loggedIn} />
+            <PostList deletePost={sameUser} id={id}/>
           </div>
         </section>
       )}

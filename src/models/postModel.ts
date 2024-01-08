@@ -39,8 +39,18 @@ const postSchema = new mongoose.Schema({
     ],
     comments: [
         {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "users"
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true
+            },
+            name:String,
+            comment: String,
+            userName: String,
+            profilePic: String,
+            time: {
+                type: Date,
+                default: Date.now
+            }
         }
     ],
     shares: [
