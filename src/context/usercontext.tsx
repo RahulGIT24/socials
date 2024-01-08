@@ -1,7 +1,15 @@
 // contexts/YourContext.tsx
 import axios from "axios";
-import { createContext, useState, useContext, ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import getLikedPosts from "@/helpers/likedPosts";
 
 interface UserContextProps {
   children: ReactNode;
@@ -9,9 +17,15 @@ interface UserContextProps {
 
 interface UserContextValue {
   userState: any;
+  likedP: [];
   setuserState: (value: any) => void;
   getUser: (value: any) => void;
-  fetchPost: (value: string, value1: string, value2: string,value3:number) => any;
+  fetchPost: (
+    value: string,
+    value1: string,
+    value2: string,
+    value3: number
+  ) => any;
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
@@ -19,6 +33,7 @@ const UserContext = createContext<UserContextValue | undefined>(undefined);
 export const UserContextProvider: React.FC<UserContextProps> = ({
   children,
 }) => {
+  const router = useRouter();
   const [userState, setuserState] = useState<{
     id: string;
     backgroundImage: string;
@@ -34,8 +49,8 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     dateofbirth: string;
     gender: string;
     email: string;
-    followersCount:number;
-    likedPosts:[];
+    followersCount: number;
+    likedPosts: [];
   }>({
     id: "",
     backgroundImage: "",
@@ -53,8 +68,10 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     gender: "",
     email: "",
     followersCount: 0,
-    likedPosts:[]
+    likedPosts: [],
   });
+
+  const [likedP, setLikedP] = useState<[]>([]);
 
   const getUser = async (userName: any) => {
     try {
@@ -77,22 +94,35 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
         gender: res.data.user.gender,
         email: res.data.user.email,
         followersCount: res.data.user.followers.length,
-        likedPosts:res.data.user.LikedPosts
+        likedPosts: res.data.user.LikedPosts,
       });
     } catch (e: any) {
       toast.error(e.response.data.error);
+      router.push("/error");
       return;
     }
   };
 
+  // function to get liked posts of logged in users
+  async function getLikes() {
+    const res = await getLikedPosts();
+    setLikedP(res);
+  }
+
   // function to fetchposts
-  const fetchPost = async (type: string, postId: string, userId: string, page:number) => {
+  const fetchPost = async (
+    type: string,
+    postId: string,
+    userId: string,
+    page: number
+  ) => {
     try {
       const post = await axios.post(`/api/posts/fetch/${page}`, {
         type,
         postId,
         userId,
       });
+      await getLikes();
       return post;
     } catch (e: any) {
       return;
@@ -104,6 +134,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     setuserState,
     getUser,
     fetchPost,
+    likedP,
   };
 
   return (

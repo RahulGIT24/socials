@@ -3,22 +3,25 @@
 import React, { useEffect, useState } from "react";
 import PostCard from "./PostCard";
 import { useUserContext } from "@/context/usercontext";
-import { InfinitySpin } from "react-loader-spinner";
 import axios from "axios";
 import toast from "react-hot-toast";
+import getLikedPosts from "@/helpers/likedPosts";
 
 const PostList = ({ deletePost, id,loggedIn}: any) => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<[]>([]);
   const { fetchPost } = useUserContext();
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState<number>(1);
+  // const [page, setPage] = useState<number>(1);
+  const [likedPosts,setLikedPosts] = useState<[]>([]);
 
   async function getPost() {
     try {
       setLoading(true);
-      const res = await fetchPost("USERID", "", id, page);
+      const res = await fetchPost("USERID", "", id, 0);
       const post = res.data.posts;
       setPosts(post);
+      const likedP = await getLikedPosts();
+      setLikedPosts(likedP);
       // setPage(page + 1);
       return;
     } catch (e) {
@@ -41,26 +44,10 @@ const PostList = ({ deletePost, id,loggedIn}: any) => {
   };
 
   useEffect(() => {
-    if (posts.length === 0 && !loading) {
+    if (posts.length === 0) {
       getPost();
     }
   }, []);
-
-  // const handleScroll = () => {
-  //   const windowHeight = window.innerHeight;
-  //   const documentHeight = document.documentElement.offsetHeight;
-  //   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  //   const scrollBottom = scrollTop + windowHeight;
-
-  //   if (scrollBottom >= documentHeight - 200 && !loading) {
-  //     getPost();
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, [loading, page]);
 
   return (
     <>
@@ -78,14 +65,10 @@ const PostList = ({ deletePost, id,loggedIn}: any) => {
             post={post}
             delPost={delPost}
             loggedIn={loggedIn}
+            likedPosts={likedPosts}
           />
         );
       })}
-      {loading && (
-        <div className="flex justify-center items-center w-full">
-          <InfinitySpin width="200" color="white" />
-        </div>
-      )}
     </>
   );
 };

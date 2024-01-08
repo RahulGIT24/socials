@@ -1,7 +1,6 @@
 "use client";
 
 import PostList from "@/components/PostList";
-import Spinner from "@/components/Spinner";
 import { useUserContext } from "@/context/usercontext";
 import { isFollowed } from "@/helpers/isFollowed";
 import { isSameUser } from "@/helpers/sameuser";
@@ -17,7 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import LoadingBar from "react-top-loading-bar";
+import { InfinitySpin } from "react-loader-spinner";
 
 const Profile = ({ params }: any) => {
   const { getUser, userState, setuserState } = useUserContext();
@@ -27,7 +26,6 @@ const Profile = ({ params }: any) => {
   const [followBtn, setFollowBtn] = useState<string>("Follow");
   const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
   const [sameUser, setSameUser] = useState<boolean | null>(null);
-  const [progress, setProgress] = useState<number>(0);
   const [followState, setFollowState] = useState<boolean | null>(false);
   const [disabled, setDisabled] = useState(false);
 
@@ -86,7 +84,6 @@ const Profile = ({ params }: any) => {
   async function follow() {
     try {
       setDisabled(true);
-      setProgress(50);
       await axios.put("/api/users/update/follow", {
         targetUserid: id,
       });
@@ -103,7 +100,6 @@ const Profile = ({ params }: any) => {
       return;
     } finally {
       setDisabled(false);
-      setProgress(100);
     }
   }
 
@@ -111,7 +107,6 @@ const Profile = ({ params }: any) => {
   async function unFollow() {
     try {
       setDisabled(true);
-      setProgress(60);
       await axios.put("/api/users/update/unfollow", {
         targetUserid: id,
       });
@@ -130,7 +125,6 @@ const Profile = ({ params }: any) => {
       return;
     } finally {
       setDisabled(false);
-      setProgress(100);
     }
   }
 
@@ -170,14 +164,11 @@ const Profile = ({ params }: any) => {
   return (
     <>
       {loading === true ? (
-        <Spinner />
+        <div className="flex justify-center items-center w-full">
+          <InfinitySpin width="200" color="white" />
+        </div>
       ) : (
         <section className="w-full flex justify-center items-center flex-col">
-          <LoadingBar
-            color="blue"
-            progress={progress}
-            onLoaderFinished={() => setProgress(0)}
-          />
           <div className="cover-image flex justify-start items-start flex-col ml-10 w-4/5">
             <Image
               className="rounded-full mt-12 mb-6"
@@ -199,20 +190,6 @@ const Profile = ({ params }: any) => {
                   {location}
                 </p>
               )}
-
-              {/* {webLink && (
-                <p className="mr-4">
-                  <FontAwesomeIcon icon={faLink} className="mr-2" />
-                  <a
-                    href={`https://${webLink}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500"
-                  >
-                    Visit My Website
-                  </a>
-                </p>
-              )} */}
 
               <p>
                 <FontAwesomeIcon icon={faCalendarDays} className="mr-2" />
@@ -264,7 +241,8 @@ const Profile = ({ params }: any) => {
                     ? "text-white bg-black"
                     : "text-black bg-white"
                 } `}
-                  onClick={handleFollow} disabled={disabled}
+                  onClick={handleFollow}
+                  disabled={disabled}
                 >
                   {followBtn}
                 </button>
@@ -273,7 +251,7 @@ const Profile = ({ params }: any) => {
             <div className="w-full h-2 bg-white mb-12"></div>
           </div>
           <div className="flex justify-start items-start flex-col ml-10 w-4/5">
-            <PostList deletePost={sameUser} id={id} loggedIn={loggedIn}/>
+            <PostList deletePost={sameUser} id={id} loggedIn={loggedIn} />
           </div>
         </section>
       )}
