@@ -1,13 +1,13 @@
 "use client";
 
-import Following from "@/components/Following";
+import FollowingComp from "@/components/FollowingComp";
 import { useUserContext } from "@/context/usercontext";
 import { isSameUser } from "@/helpers/sameuser";
 import Link from "next/link";
 
 import React, { useEffect, useState } from "react";
 
-const following = ({ params }: any) => {
+const Following = ({ params }: any) => {
   const username = params.username;
   const { getUser, userState } = useUserContext();
   const [loading, setLoading] = useState(true);
@@ -47,7 +47,7 @@ const following = ({ params }: any) => {
                 className="w-full flex justify-center items-center"
                 key={index}
               >
-                <Following
+                <FollowingComp
                   remove={remove}
                   item={item}
                   getUser={getUserByName}
@@ -68,4 +68,4 @@ const following = ({ params }: any) => {
   );
 };
 
-export default following;
+export default Following;
