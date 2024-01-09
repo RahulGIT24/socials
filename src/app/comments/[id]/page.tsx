@@ -31,7 +31,7 @@ const Comments = ({ params }: any) => {
   });
   const getPost = async () => {
     try {
-      const res = await axios.post(`/api/posts/fetch/${0}`, {
+      const res = await axios.post(`/api/posts/fetch`, {
         type: "POSTID",
         postId: id,
         userId: "",

@@ -26,7 +26,7 @@ const Search = () => {
     }
     try {
       setLoading(true);
-      const res = await axios.get(`/api/users/fetch/search/${search}`);
+      const res = await axios.post(`/api/users/fetch/search`,{userName:search});
       setSearchResults(res.data.users);
       return;
     } catch (error: any) {

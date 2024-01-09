@@ -120,7 +120,7 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
     page: number
   ) => {
     try {
-      const post = await axios.post(`/api/posts/fetch/${page}`, {
+      const post = await axios.post(`/api/posts/fetch`, {
         type,
         postId,
         userId,

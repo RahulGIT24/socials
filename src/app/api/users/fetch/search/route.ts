@@ -5,11 +5,13 @@ import User from "@/models/userModel";
 import connect from "@/config/db";
 
 connect();
-export async function GET(request: NextRequest, req: NextApiRequest) {
+export async function POST(request: NextRequest) {
     try {
 
-        if (req.params.username && req.params.username[0] === '@') {
-            req.params.username = req.params.username.slice(1);
+        const reqBody = await request.json();
+        let {userName} = reqBody;
+        if(userName && userName[0] === '@'){
+            userName = userName.slice(1);
         }
 
         // Checking if user exists
@@ -25,7 +27,7 @@ export async function GET(request: NextRequest, req: NextApiRequest) {
         }
 
         // Making search
-        const keyword = { userName: { $regex: req.params.username, $options: "i" } };
+        const keyword = { userName: { $regex: userName, $options: "i" } };
 
         const users = await User.find(keyword).find({ _id: { $ne: userId } }).select('-password');
 

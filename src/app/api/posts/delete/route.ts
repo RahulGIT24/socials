@@ -1,12 +1,12 @@
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken"
-import { NextApiRequest } from "next";
 import Post from "@/models/postModel";
 
-export async function DELETE(request: NextRequest, req: NextApiRequest) {
+export async function POST(request: NextRequest) {
     try {
-        const id  = req.params.id;
+        const reqBody = await request.json();
+        const {id}  = reqBody;
         const token: any = request.cookies.get("token");
         if (!token) {
             return NextResponse.json({ error: "Token not found" }, { status: 401 });

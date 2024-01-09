@@ -35,7 +35,7 @@ const PostList = ({ deletePost, id}: any) => {
 
   const delPost = async (id: string) => {
     try {
-      const res = await axios.delete(`/api/posts/delete/${id}`);
+      const res = await axios.post(`/api/posts/delete`,{id:id});
       getPost();
       toast.success(res.data.message);
       return;
