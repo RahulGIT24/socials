@@ -71,6 +71,7 @@ const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
   return (
     <section className="border border-gray-800 px-3 py-3 rounded-2xl mb-9 w-full">
       <div className="name-image flex items-center">
+        <Link href={`/profile/${userName}`}>
         <Image
           className="rounded-full mr-2"
           alt="profile-pic"
@@ -78,6 +79,7 @@ const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
           width={50}
           height={50}
         />
+        </Link>
         <div className="flex items-center">
           <p className="font-bold text-lg">{name}</p>
           <p className="font-extralight text-sm mx-2">@{userName}</p>
