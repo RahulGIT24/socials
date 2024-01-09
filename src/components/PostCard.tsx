@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const PostCard = ({ deletePost, post, delPost, loggedIn,likedPosts }: any) => {
+const PostCard = ({ deletePost, post, delPost, loggedIn }: any) => {
   const {likedP} = useUserContext();
   const {
     description,
@@ -53,18 +53,18 @@ const PostCard = ({ deletePost, post, delPost, loggedIn,likedPosts }: any) => {
 
   // check if post is already liked
   const check = () => {
-    likedP.map((item: any) => {
-      if (item === _id) {
-        setLike(true);
-      }
-    });
+    if(likedP){
+      likedP.map((item: any) => {
+        if (item === _id) {
+          setLike(true);
+        }
+      });
+    }
     return;
   };
 
   useEffect(() => {
-    if(loggedIn){
       check();
-    }
   }, []);
 
   // function to delete post

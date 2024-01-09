@@ -25,10 +25,6 @@ const PostList = ({ deletePost, id}: any) => {
       // setPage(page + 1);
       const {loggedIn}:any = await isSameUser("");
       setLoggedIn(loggedIn);
-      if(loggedIn){
-        const likedP = await getLikedPosts();
-        setLikedPosts(likedP);
-      }
       return;
     } catch (e) {
       return;
@@ -71,7 +67,6 @@ const PostList = ({ deletePost, id}: any) => {
             post={post}
             delPost={delPost}
             loggedIn={loggedIn}
-            likedPosts={likedPosts}
           />
         );
       })}

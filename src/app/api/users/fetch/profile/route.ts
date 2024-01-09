@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
             const token: any = request.cookies.get("token");
 
             if (!token) {
-                return NextResponse.json({ error: "Token not available" }, { status: 400 })
+                return NextResponse.json({ error: "Token not available" }, { status: 200 })
             }
 
             const decodedToken: string | object = jwt.verify(token.value, process.env.TOKEN_SECRET!);

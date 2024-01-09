@@ -5,11 +5,11 @@ import {
   useState,
   useContext,
   ReactNode,
-  useEffect,
 } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import getLikedPosts from "@/helpers/likedPosts";
+import { isSameUser } from "@/helpers/sameuser";
 
 interface UserContextProps {
   children: ReactNode;
@@ -105,8 +105,11 @@ export const UserContextProvider: React.FC<UserContextProps> = ({
 
   // function to get liked posts of logged in users
   async function getLikes() {
-    const res = await getLikedPosts();
-    setLikedP(res);
+    const {loggedIn}:any = await isSameUser("");
+    if(loggedIn){
+      const res = await getLikedPosts();
+      setLikedP(res);
+    }
   }
 
   // function to fetchposts
