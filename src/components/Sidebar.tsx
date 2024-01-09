@@ -122,7 +122,7 @@ const Sidebar = () => {
                 }`}
               >
                 <FontAwesomeIcon icon={faImages} />
-                <span className="ms-3">Posts</span>
+                <span className="ms-3">Feed</span>
               </Link>
             </li>
             <li>
