@@ -23,5 +23,9 @@ export const postImage = async (form: any) => {
         }
     ).then((r) => r.json());
 
-    return data.secure_url;
+    const res = {
+        postId: data.public_id,
+        url: data.secure_url
+    }
+    return res;
 };

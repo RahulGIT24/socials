@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { InfinitySpin } from "react-loader-spinner";
+import LoadingBar from "react-top-loading-bar";
 
 const Profile = ({ params }: any) => {
   const { getUser, userState, setuserState } = useUserContext();
@@ -28,6 +29,7 @@ const Profile = ({ params }: any) => {
   const [sameUser, setSameUser] = useState<boolean | null>(null);
   const [followState, setFollowState] = useState<boolean | null>(false);
   const [disabled, setDisabled] = useState(false);
+  const [progress, setProgress] = useState<number>(0);
 
   const {
     id,
@@ -169,6 +171,11 @@ const Profile = ({ params }: any) => {
         </div>
       ) : (
         <section className="w-full flex justify-center items-center flex-col">
+          <LoadingBar
+            color="blue"
+            progress={progress}
+            onLoaderFinished={() => setProgress(0)}
+          />
           <div className="cover-image flex justify-start items-start flex-col ml-10 w-4/5">
             <Image
               className="rounded-full mt-12 mb-6"
@@ -251,7 +258,7 @@ const Profile = ({ params }: any) => {
             <div className="w-full h-2 bg-white mb-12"></div>
           </div>
           <div className="flex justify-start items-start flex-col ml-10 w-4/5">
-            <PostList deletePost={sameUser} id={id}/>
+            <PostList deletePost={sameUser} id={id} setProgress={setProgress}/>
           </div>
         </section>
       )}

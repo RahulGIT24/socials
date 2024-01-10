@@ -2,11 +2,12 @@ import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken"
 import Post from "@/models/postModel";
+import deleteImageFromCloud from "@/helpers/deleteImage";
 
 export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json();
-        const {id}  = reqBody;
+        const { id } = reqBody;
         const token: any = request.cookies.get("token");
         if (!token) {
             return NextResponse.json({ error: "Token not found" }, { status: 401 });
@@ -33,6 +34,9 @@ export async function POST(request: NextRequest) {
             { _id: userId },
             { $pull: { posts: id } }
         );
+        if (post.publicId) {
+            await deleteImageFromCloud(post.publicId);
+        }
         return NextResponse.json({ message: "Post deleted!" }, { status: 200 });
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 500 });

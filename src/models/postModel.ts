@@ -10,6 +10,10 @@ const postSchema = new mongoose.Schema({
     image: {
         type: String,
     },
+    publicId:{
+        type:String,
+        default:""
+    },
     video: {
         type: String,
     },

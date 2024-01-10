@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     try {
         connect();
         const reqBody: RequestBody = await request.json();
-        const { desc, pic } = reqBody;
+        const { desc, pic, postId }:any = reqBody;
 
         if (desc === "" && pic == null) {
             return NextResponse.json({ error: "Incomplete Information" }, { status: 400 })
@@ -41,9 +41,10 @@ export async function POST(request: NextRequest) {
         }
 
         const newPost = new Post({
-            name:user.name,
+            name: user.name,
             description: desc,
             image: pic,
+            publicId: postId,
             creator: userId,
             userPic: user.profilePic,
             userName: user.userName

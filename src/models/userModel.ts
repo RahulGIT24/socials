@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
     },
+    publicId:{
+        type:String,
+        default:""
+    },
     backgroundImage: {
         type: String,
         default: "https://www.munichre.com/content/dam/munichre/global/images/royalty-free/GettyImages-1194981230.jpg/_jcr_content/renditions/cropped.3_to_1.jpg./cropped.3_to_1.jpg"

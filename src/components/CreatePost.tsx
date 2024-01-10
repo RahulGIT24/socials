@@ -58,11 +58,12 @@ const CreatePost = () => {
     try {
       setDisabled(true);
       setProgress(30);
-      const link = await uploadImage();
+      const result = await uploadImage();
       setProgress(70);
       const res = await axios.post("/api/posts/create", {
         desc: desc,
-        pic: link,
+        pic: result?.url,
+        postId: result?.postId,
       });
       setDesc("");
       setCount(0);

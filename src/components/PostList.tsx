@@ -8,13 +8,12 @@ import toast from "react-hot-toast";
 import getLikedPosts from "@/helpers/likedPosts";
 import { isSameUser } from "@/helpers/sameuser";
 
-const PostList = ({ deletePost, id}: any) => {
+const PostList = ({ deletePost, id,setProgress}: any) => {
   const [posts, setPosts] = useState<[]>([]);
   const { fetchPost } = useUserContext();
   const [loading, setLoading] = useState(false);
   const [loggedIn,setLoggedIn] = useState<boolean>(false);
   // const [page, setPage] = useState<number>(1);
-  const [likedPosts,setLikedPosts] = useState<[]>([]);
 
   async function getPost() {
     try {
@@ -35,6 +34,7 @@ const PostList = ({ deletePost, id}: any) => {
 
   const delPost = async (id: string) => {
     try {
+      setProgress(40);
       const res = await axios.post(`/api/posts/delete`,{id:id});
       getPost();
       toast.success(res.data.message);
@@ -42,6 +42,8 @@ const PostList = ({ deletePost, id}: any) => {
     } catch (e: any) {
       toast.error(e.response.data.error);
       return;
+    }finally{
+      setProgress(100);
     }
   };
 
