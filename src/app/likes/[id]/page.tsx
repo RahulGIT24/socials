@@ -11,7 +11,7 @@ const Like = ({ params }: any) => {
   const getPost = async () => {
     try {
       const id = params.id;
-      const res: any = await axios.post(`/api/posts/fetch/${0}`, {
+      const res: any = await axios.post(`/api/posts/fetch`, {
         type: "POSTID",
         postId: id,
         userId: "",

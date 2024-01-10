@@ -2,6 +2,7 @@ import connect from '@/config/db'
 import { NextRequest, NextResponse } from "next/server"
 import User from '@/models/userModel';
 import jwt from "jsonwebtoken";
+import Post from '@/models/postModel';
 
 connect();
 
@@ -32,6 +33,16 @@ export async function PUT(request: NextRequest) {
         user.location = location;
         user.gender = gender;
         await user.save();
+        await Post.updateMany({ creator: userId }, { $set: { name: name } });
+        await Post.updateMany(
+            { "likes.id": userId },
+            { $set: { "likes.$.name": name } }
+        );
+
+        await Post.updateMany(
+            { "comments.id": userId },
+            { $set: { "comments.$.name": name } }
+        );
 
         return NextResponse.json({ message: "Profile Updated Successfully" }, { status: 200 });
 

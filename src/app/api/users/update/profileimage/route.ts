@@ -2,6 +2,7 @@ import connect from "@/config/db";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken"
 import User from "@/models/userModel";
+import Post from "@/models/postModel";
 
 export async function PUT(request: NextRequest) {
     try {
@@ -25,7 +26,15 @@ export async function PUT(request: NextRequest) {
 
         user.profilePic = url;
         await user.save();
-
+        await Post.updateMany({ creator: userId }, { $set: { userPic: url } });
+        await Post.updateMany(
+            { "comments.id": userId },
+            { $set: { "comments.$.profilePic": url } }
+        );
+        await Post.updateMany(
+            { "likes.id": userId },
+            { $set: { "likes.$.profilePic": url } }
+        );
         return NextResponse.json({ message: "Profile pic updated" }, { status: 200 })
 
     } catch (e: any) {

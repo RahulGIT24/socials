@@ -45,7 +45,7 @@ const Comments = ({ params }: any) => {
         image: res.data.post.image,
       });
       const { loggedIn }: any = await isSameUser("");
-      setLoggedIn(loggedIn);
+      setLoggedIn(loggedIn);  
       return;
     } catch (error: any) {
       toast.error(error.response.data.error);
@@ -175,13 +175,16 @@ const Comments = ({ params }: any) => {
             >
               <div className="w-3/4 border border-gray-800 py-6 px-4">
                 <div className="image flex items-center">
+                  {
+                    comment.profilePic &&
                   <Image
-                    src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
+                    src={comment.profilePic}
                     width={50}
                     height={50}
                     className="rounded-full"
                     alt="profile-pic"
                   />
+                  }
                   <p className="font-bold ml-2 text-xl">{comment.name}</p>
                   <p className="font-extralight italic ml-2">
                     @{comment.userName}

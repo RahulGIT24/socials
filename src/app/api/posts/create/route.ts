@@ -49,7 +49,9 @@ export async function POST(request: NextRequest) {
             userName: user.userName
         })
 
-        await newPost.save();
+        const nPost = await newPost.save();
+        user.posts.push(nPost._id);
+        await user.save();
         return NextResponse.json({ message: "Posted Successfully" }, { status: 200 })
 
     } catch (e: any) {
