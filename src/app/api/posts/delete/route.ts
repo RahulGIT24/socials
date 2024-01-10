@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "You can't delete this post" }, { status: 401 });
         }
         await Post.findByIdAndDelete(id);
+        await User.updateOne(
+            { _id: userId },
+            { $pull: { posts: id } }
+        );
         return NextResponse.json({ message: "Post deleted!" }, { status: 200 });
     } catch (e: any) {
         return NextResponse.json({ error: e.message }, { status: 500 });
