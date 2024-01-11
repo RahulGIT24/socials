@@ -14,6 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>Socials</title>
+      </head>
       <body className={inter.className}>
         <UserContextProvider>{children}</UserContextProvider>
         <Toaster position="bottom-center" reverseOrder={false} />
